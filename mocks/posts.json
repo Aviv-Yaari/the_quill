@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "title": "The Art of Writing Effective Emails",
+    "subtitle": "How to Communicate Professionally and Clearly",
+    "author": "johndoe",
+    "body": "Learn how to write effective emails that are professional, clear, and get results.",
+    "timestamp": 1645252000,
+    "tags": ["email", "communication", "professionalism"],
+    "image_url": "https://example.com/images/emails.jpg",
+    "read_time": 6,
+    "likes": 85,
+    "comments": [
+      {
+        "author": "janedoe",
+        "body": "Great post! As someone who communicates primarily through email, I found these tips incredibly helpful.",
+        "timestamp": 1645319200
+      },
+      {
+        "author": "sarahlee",
+        "body": "I've been struggling with my email communication lately, so this post came at the perfect time. Thank you!",
+        "timestamp": 1645485600
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "The Power of Positive Thinking",
+    "subtitle": "How to Improve Your Mindset and Achieve Your Goals",
+    "author": "happythoughts",
+    "body": "Discover the benefits of positive thinking and learn techniques for improving your mindset and achieving your goals.",
+    "timestamp": 1645255600,
+    "tags": ["positive thinking", "mindset", "personal growth"],
+    "image_url": "https://example.com/images/positive-thinking.jpg",
+    "read_time": 7,
+    "likes": 110,
+    "comments": [
+      {
+        "author": "joedoe",
+        "body": "I never realized the impact that my thoughts could have on my life. This post was eye-opening!",
+        "timestamp": 1645322800
+      },
+      {
+        "author": "emilynguyen",
+        "body": "Thank you for this wonderful post! I'm going to start implementing some of these techniques in my daily life.",
+        "timestamp": 1645492000
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "10 Delicious and Healthy Meal Prep Ideas",
+    "subtitle": "How to Save Time and Eat Well",
+    "author": "healthyeats",
+    "body": "Get inspired with these 10 delicious and healthy meal prep ideas that will save you time and help you eat well.",
+    "timestamp": 1645262800,
+    "tags": ["meal prep", "healthy eating", "time-saving"],
+    "image_url": "https://example.com/images/meal-prep.jpg",
+    "read_time": 8,
+    "likes": 95,
+    "comments": [
+      {
+        "author": "chrisnguyen",
+        "body": "These recipes look amazing! I'm definitely going to try some of these out this week.",
+        "timestamp": 1645326400
+      },
+      {
+        "author": "marysmith",
+        "body": "As someone who struggles with meal prep, this post was super helpful. Thank you for sharing!",
+        "timestamp": 1645495200
+      }
+    ]
+  }      
+]
