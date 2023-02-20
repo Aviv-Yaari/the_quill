@@ -11,7 +11,8 @@ const theme: DefaultTheme = {
     secondary: 'white'
   },
   border: {
-    primary: '#ccc'
+    primary: "#aaa",
+    secondary: '#ccc'
   },
   buttons: {
     primaryBg: '#222831',

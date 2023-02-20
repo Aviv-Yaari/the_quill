@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "_id": "1",
     "title": "The Art of Writing Effective Emails",
     "subtitle": "How to Communicate Professionally and Clearly",
     "author": "johndoe",
@@ -24,7 +24,7 @@
     ]
   },
   {
-    "id": 2,
+    "_id": "2",
     "title": "The Power of Positive Thinking",
     "subtitle": "How to Improve Your Mindset and Achieve Your Goals",
     "author": "happythoughts",
@@ -48,7 +48,7 @@
     ]
   },
   {
-    "id": 3,
+    "_id": "3",
     "title": "10 Delicious and Healthy Meal Prep Ideas",
     "subtitle": "How to Save Time and Eat Well",
     "author": "healthyeats",
@@ -70,5 +70,62 @@
         "timestamp": 1645495200
       }
     ]
-  }      
+  },
+  {
+    "_id": "4",
+    "title": "5 Quick and Easy Breakfast Ideas for Busy Mornings",
+    "subtitle": "Start Your Day Right with These Time-Saving Recipes",
+    "author": "breakfastclub",
+    "body": "Don't skip breakfast! Try these 5 quick and easy breakfast ideas that are perfect for busy mornings. You'll save time and fuel your body for the day ahead.",
+    "timestamp": 1651459200,
+    "tags": ["breakfast", "time-saving", "recipes"],
+    "image_url": "https://example.com/images/breakfast-ideas.jpg",
+    "read_time": 5,
+    "likes": 76,
+    "comments": [
+      {
+        "author": "foodiegirl",
+        "body": "I'm always in a rush in the morning, so these ideas are perfect for me. Thanks for sharing!",
+        "timestamp": 1651502400
+      }
+    ]
+  },
+  {
+    "_id": "5",
+    "title": "8 Vegetarian Dinner Recipes for Meatless Mondays",
+    "subtitle": "Try Something New and Healthy Every Week",
+    "author": "veggiecrush",
+    "body": "Meatless Mondays just got more exciting with these 8 vegetarian dinner recipes that are both delicious and healthy. Give them a try and discover new favorite meals!",
+    "timestamp": 1649481600,
+    "tags": ["vegetarian", "dinner", "recipes"],
+    "image_url": "https://example.com/images/vegetarian-dinners.jpg",
+    "read_time": 7,
+    "likes": 113,
+    "comments": [
+      {
+        "author": "meatlover",
+        "body": "I never thought I'd enjoy vegetarian meals, but these recipes have changed my mind. Thanks for sharing!",
+        "timestamp": 1649586000
+      }
+    ]
+  },
+  {
+    "_id": "6",
+    "title": "7 Simple Ways to Stay Hydrated Throughout the Day",
+    "subtitle": "Improve Your Health with Easy Hydration Tips",
+    "author": "healthylife",
+    "body": "Dehydration can lead to fatigue, headaches, and other health issues. Stay hydrated throughout the day with these 7 simple tips, including drinking enough water and eating water-rich foods.",
+    "timestamp": 1647196800,
+    "tags": ["hydration", "health", "tips"],
+    "image_url": "https://example.com/images/hydration-tips.jpg",
+    "read_time": 6,
+    "likes": 87,
+    "comments": [
+      {
+        "author": "fitnessfan",
+        "body": "I always struggle with drinking enough water, so these tips are really helpful. Thank you for sharing!",
+        "timestamp": 1647260400
+      }
+    ]
+  }
 ]

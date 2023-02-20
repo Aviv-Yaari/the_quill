@@ -5,13 +5,13 @@ import PostPreview from './PostPreview';
 const PostList = () => {
   return (
     <Container>
-      {posts.map(post => <PostPreview key={post.id} post={post} />)}
+      {posts.map(post => <PostPreview key={post._id} post={post} />)}
     </Container>
-  )
-}
+  );
+};
 
 const Container = styled.section`
   grid-row: 2;
-`
+`;
 
 export default PostList;

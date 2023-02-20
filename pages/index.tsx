@@ -1,6 +1,7 @@
 import Filters from "@/components/Filters";
 import Navbar from "@/components/Navbar";
 import PostList from "@/components/PostList";
+import { GridLayout } from "@/styles/helpers";
 import Head from "next/head";
 import styled from "styled-components";
 
@@ -13,18 +14,12 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Container>
-        <h1>The Quill</h1>
-        <Navbar />
+      <GridLayout>
         <PostList />
         <Filters/>
-      </Container>
+      </GridLayout>
     </>
   );
 }
 
-const Container = styled.main`
-  display: grid;
-  grid-template-rows: auto 1fr;
-  grid-column-gap: 2em;
-`;
+

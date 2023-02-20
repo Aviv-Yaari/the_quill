@@ -2,7 +2,7 @@ import clientPromise from '@/lib/mongodb';
 import Post from '@/types/Post';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<Post[]>) {
+export default async function getPosts(req: NextApiRequest, res: NextApiResponse<Post[]>) {
   if (req.method === 'POST') {
     return require('./create').default(req, res);
   }

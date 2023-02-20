@@ -3,27 +3,29 @@ import type { AppProps } from 'next/app';
 import theme from '@/styles/theme';
 import GlobalStyle from '@/styles/GlobalStyle';
 import { breakpoints } from '@/styles/theme';
+import Navbar from '@/components/Navbar';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
-        <MainLayout>
-          <Component {...pageProps} />
-        </MainLayout>
+        <MainContent>
+          <div>
+            <Navbar />
+            <Component {...pageProps} />
+          </div>
+        </MainContent>
       </ThemeProvider>
     </>
   );
 }
 
-const MainLayout = styled.main`
+const MainContent = styled.main`
   display: flex;
   justify-content: center;
-  min-height: 100vh;
   >:first-child {
-    margin-inline: 1em;
-    width: 100%;
     max-width: ${breakpoints.desktopBreakpoint};
+    width: 100%;
   }
 `;

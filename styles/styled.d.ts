@@ -10,6 +10,7 @@ declare module 'styled-components' {
     },
     border: {
       primary: string;
+      secondary: string;
     }
     background: {
       primary: string;

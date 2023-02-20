@@ -1,6 +1,7 @@
-import { Document, WithId } from "mongodb";
+import { Document, ObjectId, WithId } from "mongodb";
 
 interface Post extends WithId<Document> {
+    _id: ObjectId | string;
     title: string;
     subtitle: string;
     author: string;
@@ -10,7 +11,7 @@ interface Post extends WithId<Document> {
     image_url: string;
     read_time: number;
     likes: number;
-    comments: Comment[]
+    comments: Comment[];
 }
 
 interface Comment {

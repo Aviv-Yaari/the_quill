@@ -1,8 +1,8 @@
-import { createGlobalStyle } from 'styled-components'
-import reset from 'styled-reset'
-import { Lora } from '@next/font/google'
+import { createGlobalStyle } from 'styled-components';
+import reset from 'styled-reset';
+import { Lora } from '@next/font/google';
 
-const lora = Lora({ subsets: ['latin'], weight: ['400', '500', '600', '700'] })
+const lora = Lora({ subsets: ['latin'], weight: ['400', '500', '600', '700'] });
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -25,10 +25,24 @@ const GlobalStyle = createGlobalStyle`
   button {
     border: none;
     background: inherit;
-    padding: 0;
+    padding: 1em 0;
     font-family: inherit;
     font-size: 1em;
     cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  input, textarea {
+    padding: 1em;
+    font-family: inherit;
+    font-size: 1em;
+    border: 1px dashed ${({theme}) => theme.border.primary};
+    outline: none;
+    &:focus-visible {
+      border: 1px dashed black;
+    }
   }
 
   a {
@@ -43,6 +57,6 @@ const GlobalStyle = createGlobalStyle`
     line-height: 1.75;
   }
 
-`
+`;
 
-export default GlobalStyle
+export default GlobalStyle;
