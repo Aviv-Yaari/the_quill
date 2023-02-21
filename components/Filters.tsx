@@ -1,6 +1,18 @@
+import Tag, { TagLabelAndValue } from "@/types/Tag";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import Select from 'react-select';
+import TagSelect from "./shared/TagSelect";
 
 const Filters = () => {
+  const [allTags, setAllTags] = useState<TagLabelAndValue[]>();
+  const [selectedTags, setSelectedTags] = useState<TagLabelAndValue[]>();
+
+  useEffect(() => { 
+    axios.get('/api/tag').then(res => setAllTags(res.data));
+  }, []);
+
   return (
     <Container>
       <div>
@@ -9,9 +21,14 @@ const Filters = () => {
           <label htmlFor="keywords">Keywords</label>
           <input id="keywords" name="keywords" type="text" />
         </Keywords>
-        <div>
-          <span>Tags</span>
-        </div>
+        {allTags &&(
+          <div>
+            <span>Tags</span>
+            <TagSelect 
+              options={allTags} 
+              onChange={(selected) => setSelectedTags([...selected])}
+            />
+          </div>)}
         <div>
           <span>Likes</span>
         </div>

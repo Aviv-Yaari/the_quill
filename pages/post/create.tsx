@@ -1,16 +1,28 @@
 import BackButton from "@/components/shared/BackButton";
+import Tag, { TagLabelAndValue } from "@/types/Tag";
 import axios from "axios";
-import { FormEventHandler, useRef } from "react";
+import { FormEventHandler, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import Select from 'react-select';
+import TagSelect from "@/components/shared/TagSelect";
 
 export default function CreatePost() {
-  const title = useRef<HTMLInputElement>(null);
-  const subtitle = useRef<HTMLInputElement>(null);
-  const body = useRef<HTMLTextAreaElement>(null);
+  const [allTags, setAllTags] = useState<TagLabelAndValue[]>();
+  const [selectedTags, setSelectedTags] = useState<TagLabelAndValue[]>();
+
+  useEffect(() => { 
+    axios.get('/api/tag').then(res => setAllTags(res.data));
+  }, []);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (ev) => {
     ev.preventDefault();
-    const response = await axios.post("/api/post", { title: title.current?.value, subtitle: subtitle.current?.value, body: body.current?.value });
+    const formData = new FormData(ev.target as HTMLFormElement);
+    const title = formData.get("title");
+    const subtitle = formData.get("subtitle");
+    const body = formData.get("body");
+    const tagIDs = selectedTags?.map(tag => tag.value);
+    await axios.post("/api/post", { title, subtitle, body, tags: tagIDs });
+    alert('success!');
   };
 
   return (
@@ -20,19 +32,23 @@ export default function CreatePost() {
       <form onSubmit={handleSubmit}>
         <Title>
           <label htmlFor="post_title">Title:</label>
-          <input ref={title} type="text" id="post_title" placeholder="Enter some nice title"/>
+          <input type="text" id="post_title" name="title" placeholder="Enter some nice title"/>
         </Title>
         <Title>
           <label htmlFor="post_subtitle">Subtitle:</label>
-          <input ref={subtitle} type="text" id="post_subtitle" placeholder="A short summary"/>
+          <input type="text" id="post_subtitle" name="subtitle" placeholder="A short summary"/>
         </Title>
-        <Title>
-          <label htmlFor="">Tags:</label>
-          <input type="text" id="" />
-        </Title>
+        {allTags && (
+          <Title>
+            <label htmlFor="">Tags:</label>
+            <TagSelect 
+              options={allTags} 
+              onChange={(selected) => setSelectedTags([...selected])}
+            />
+          </Title>)}
         <Title>
           <label htmlFor="post_body">Body:</label>
-          <textarea ref={body} name="body" id="post_body" cols={30} rows={10} placeholder="Your post goes here"></textarea>
+          <textarea name="body" id="post_body" cols={30} rows={10} placeholder="Your post goes here"></textarea>
         </Title>
         <button>Submit</button>
       </form>

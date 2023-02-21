@@ -1,8 +1,8 @@
 import clientPromise from '@/lib/mongodb';
-import Post from '@/types/Post';
+import Tag, { TagLabelAndValue } from '@/types/Tag';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function getPosts(req: NextApiRequest, res: NextApiResponse<Post[]>) {
+export default async function getTags(req: NextApiRequest, res: NextApiResponse<TagLabelAndValue[]>) {
   if (req.method === 'POST') {
     return require('./create').default(req, res);
   }
@@ -10,10 +10,10 @@ export default async function getPosts(req: NextApiRequest, res: NextApiResponse
   const db = client.db("main");
   
   const result = await db
-    .collection("posts")
+    .collection("tags")
     .find({})
     .toArray();
 
-  const posts = result as Post[];
-  res.json(posts);
+  const tags = (result as Tag[]).map(option => ({ value: option._id, label: option.title }));
+  res.json(tags);
 }

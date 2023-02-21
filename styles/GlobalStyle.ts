@@ -38,9 +38,10 @@ const GlobalStyle = createGlobalStyle`
     padding: 1em;
     font-family: inherit;
     font-size: 1em;
-    border: 1px dashed ${({theme}) => theme.border.primary};
+    border: 1px dashed ${({ theme }) => theme.border.primary};
     outline: none;
-    &:focus-visible {
+    transition: border-color 200ms;
+    &:focus-visible, &:hover {
       border: 1px dashed black;
     }
   }

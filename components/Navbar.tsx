@@ -22,6 +22,10 @@ const Container = styled(GridLayout)`
   position: sticky;
   top: 0;
   border-bottom: 1px dashed black;
+
+  a {
+    color: inherit;
+  }
 `;
 
 const Actions = styled(GridLayout)`

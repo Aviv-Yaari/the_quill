@@ -1,4 +1,5 @@
 import { Document, ObjectId, WithId } from "mongodb";
+import Tag from "./Tag";
 
 interface Post extends WithId<Document> {
     _id: ObjectId | string;
@@ -7,11 +8,16 @@ interface Post extends WithId<Document> {
     author: string;
     body: string;
     timestamp: number;
-    tags: string[];
+    tags: Tag[];
     image_url: string;
     read_time: number;
     likes: number;
     comments: Comment[];
+}
+
+interface PostToCreate extends Pick<Post, 'title' | 'subtitle', 'body'> {
+    /** IDs of the tags */
+    tags: string[];
 }
 
 interface Comment {
@@ -21,4 +27,4 @@ interface Comment {
 }
 
 export default Post;
-export { Comment };
+export { Comment, PostToCreate };
