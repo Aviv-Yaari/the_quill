@@ -1,8 +1,7 @@
-import Tag, { TagLabelAndValue } from "@/types/Tag";
+import { TagLabelAndValue } from "@/types/Tag";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Select from 'react-select';
 import TagSelect from "./shared/TagSelect";
 
 const Filters = () => {

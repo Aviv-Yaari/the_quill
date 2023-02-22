@@ -1,4 +1,3 @@
-import PostList from "@/components/PostList";
 import PostPreview from "@/components/PostPreview";
 import Post from "@/types/Post";
 import axios from "axios";

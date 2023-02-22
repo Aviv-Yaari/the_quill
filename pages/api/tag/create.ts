@@ -1,8 +1,8 @@
 import clientPromise from '@/lib/mongodb';
-import Tag from '@/types/Tag';
+import { TagIdAndTitle } from '@/types/Tag';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function createTag(req: NextApiRequest, res: NextApiResponse<Tag | {error: string}>) {    
+export default async function createTag(req: NextApiRequest, res: NextApiResponse<TagIdAndTitle | {error: string}>) {    
   try {
     const client = await clientPromise;
     const db = client.db("main");
@@ -15,7 +15,7 @@ export default async function createTag(req: NextApiRequest, res: NextApiRespons
     console.log({ result });
     res.json(tag);
   } catch (error) {
-    console.error({error});
-    res.status(500).json({error: 'Something unexpected'});
+    console.error({ error });
+    res.status(500).json({ error: 'Something unexpected' });
   }
 }

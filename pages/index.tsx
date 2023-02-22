@@ -1,11 +1,17 @@
 import Filters from "@/components/Filters";
-import Navbar from "@/components/Navbar";
 import PostList from "@/components/PostList";
 import { GridLayout } from "@/styles/helpers";
+import Post from "@/types/Post";
+import axios from "axios";
 import Head from "next/head";
-import styled from "styled-components";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [posts, setPosts] = useState<Post[]>();
+  useEffect(() => {
+    axios.get("/api/post").then(res => setPosts(res.data));
+  }, []);
+
   return (
     <>
       <Head>
@@ -15,7 +21,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <GridLayout>
-        <PostList />
+        {posts && <PostList posts={posts} />}
         <Filters/>
       </GridLayout>
     </>

@@ -1,6 +1,6 @@
 import { Document, WithId } from "mongodb";
 
-interface Tag extends WithId<Document> {
+interface TagIdAndTitle extends WithId<Document> {
     _id: ObjectId | string;
     title: string;
 }
@@ -10,5 +10,4 @@ interface TagLabelAndValue {
     value: string;
 }
 
-export default Tag;
-export { TagLabelAndValue };
+export { TagIdAndTitle, TagLabelAndValue };

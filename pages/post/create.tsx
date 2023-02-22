@@ -1,9 +1,8 @@
 import BackButton from "@/components/shared/BackButton";
-import Tag, { TagLabelAndValue } from "@/types/Tag";
+import { TagLabelAndValue } from "@/types/Tag";
 import axios from "axios";
-import { FormEventHandler, useEffect, useRef, useState } from "react";
+import { FormEventHandler, useEffect, useState } from "react";
 import styled from "styled-components";
-import Select from 'react-select';
 import TagSelect from "@/components/shared/TagSelect";
 
 export default function CreatePost() {

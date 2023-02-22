@@ -1,5 +1,5 @@
 import { Document, ObjectId, WithId } from "mongodb";
-import Tag from "./Tag";
+import { TagIdAndTitle } from "./Tag";
 
 interface Post extends WithId<Document> {
     _id: ObjectId | string;
@@ -8,7 +8,7 @@ interface Post extends WithId<Document> {
     author: string;
     body: string;
     timestamp: number;
-    tags: Tag[];
+    tags: TagIdAndTitle[];
     image_url: string;
     read_time: number;
     likes: number;

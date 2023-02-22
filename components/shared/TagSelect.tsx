@@ -1,4 +1,4 @@
-import Tag, { TagLabelAndValue } from "@/types/Tag";
+import { TagLabelAndValue } from "@/types/Tag";
 import Select from "react-select";
 import styled from "styled-components";
 
