@@ -18,7 +18,7 @@ const Navbar = () => {
 
 const Container = styled(GridLayout)`
   align-items: center;
-  background-color: ${({theme}) => theme.background.primary};
+  background-color: ${({ theme }) => theme.background.primary};
   position: sticky;
   top: 0;
   border-bottom: 1px dashed black;

@@ -1,5 +1,5 @@
 import clientPromise from '@/lib/mongodb';
-import Post, { PostToCreate } from '@/types/Post';
+import { PostToCreate } from '@/types/Post';
 import { ObjectId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 

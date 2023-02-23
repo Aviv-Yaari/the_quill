@@ -27,7 +27,7 @@ const PostPreview: React.FC<Props> = ({ post }) => {
 
 const Container = styled.article`
   padding-block: 2em;
-  border-block-end: 1px solid ${({theme}) => theme.border.primary};
+  border-block-end: 1px solid ${({ theme }) => theme.border.primary};
 `;
 
 const Subtitle = styled.span`
