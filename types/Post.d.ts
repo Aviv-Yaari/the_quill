@@ -1,23 +1,11 @@
-import { TagLabelAndValue } from "./Tag";
+import PostModel from "./models/post.model";
 
-interface Post {
-    _id: string;
-    title: string;
-    subtitle: string;
-    author: string;
-    body: string;
+interface Post extends Pick<PostModel, 'title' | 'subtitle' | 'author' | 'body' | 'read_time'> {
+    id: string;
+    tags: string[];
+    comments: { author: string; body: string; }[];
     timestamp: number;
-    tags: TagLabelAndValue[];
-    read_time: number;
     likes: number;
-    comments: Comment[];
-}
-
-interface Comment {
-    author: string;
-    body: string;
-    timestamp: number;
 }
 
 export default Post;
-export { Comment };

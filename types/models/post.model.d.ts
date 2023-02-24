@@ -8,7 +8,7 @@ interface PostModel extends WithId<Document> {
     body: string;
     tags: ObjectId[];
     read_time: number;
-    likes: number;
+    likes: ObjectId[];
     comments: ObjectId[];
 }
 

@@ -16,7 +16,7 @@ export default function UserPage() {
   return (
     <>
       <h2>{username}</h2>
-      {posts?.map(post => <PostPreview key={post._id as string} post={post} />)}
+      {posts?.map(post => <PostPreview key={post.id as string} post={post} />)}
     </>
   );
 }

@@ -2,16 +2,15 @@ import Filters from "@/components/Filters";
 import PostList from "@/components/PostList";
 import { GridLayout } from "@/styles/helpers";
 import Post from "@/types/Post";
-import axios from "axios";
+import { getPostsFromDB } from "@/utils/post_utils";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
-import { useEffect, useState } from "react";
 
-export default function Home() {
-  const [posts, setPosts] = useState<Post[]>();
-  useEffect(() => {
-    axios.get("/api/post").then(res => setPosts(res.data));
-  }, []);
+interface Props {
+  posts: Post[];
+}
 
+export default function Home({ posts }: Props) {
   return (
     <>
       <Head>
@@ -28,4 +27,8 @@ export default function Home() {
   );
 }
 
+export const getServerSideProps: GetServerSideProps = async () => {    
+  const posts = await getPostsFromDB();
+  return { props: { posts } };
+};
 

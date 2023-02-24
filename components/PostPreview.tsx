@@ -1,4 +1,6 @@
 import Post from "@/types/Post";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import styled from "styled-components";
 
 interface Props {
@@ -6,9 +8,14 @@ interface Props {
 }
 
 const PostPreview: React.FC<Props> = ({ post }) => {
+  const router = useRouter();
+  const isPostPage = router.pathname === '/post/[id]';
+  
   return (
     <Container>
-      <h2>{post.title}</h2>
+      <h2>
+        {isPostPage ? post.title : <Link href={'/post/' + post.id}>{post.title}</Link>}
+      </h2>
       <Subtitle>
         <Author>{post.author}</Author>
         <span>•</span>
@@ -26,6 +33,9 @@ const PostPreview: React.FC<Props> = ({ post }) => {
 };
 
 const Container = styled.article`
+  h2 a {
+    color: ${({ theme }) => theme.text.primary};
+  }
   padding-block: 2em;
   border-block-end: 1px solid ${({ theme }) => theme.border.primary};
 `;
