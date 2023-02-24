@@ -1,8 +1,8 @@
-import clientPromise from '@/lib/mongodb';
-import { TagIdAndTitle } from '@/types/Tag';
+import clientPromise from '@/utils/mongodb';
+import TagModel from '@/types/models/tag.model';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function createTag(req: NextApiRequest, res: NextApiResponse<TagIdAndTitle | {error: string}>) {    
+export default async function createTag(req: NextApiRequest, res: NextApiResponse<TagModel | {error: string}>) {    
   try {
     const client = await clientPromise;
     const db = client.db("main");

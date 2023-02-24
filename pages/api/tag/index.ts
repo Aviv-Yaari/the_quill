@@ -1,5 +1,6 @@
-import clientPromise from '@/lib/mongodb';
-import { TagIdAndTitle, TagLabelAndValue } from '@/types/Tag';
+import clientPromise from '@/utils/mongodb';
+import { TagLabelAndValue } from '@/types/Tag';
+import TagModel from '@/types/models/tag.model';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function getTags(req: NextApiRequest, res: NextApiResponse<TagLabelAndValue[]>) {
@@ -14,6 +15,6 @@ export default async function getTags(req: NextApiRequest, res: NextApiResponse<
     .find({})
     .toArray();
 
-  const tags: TagLabelAndValue[] = (result as TagIdAndTitle[]).map(option => ({ value: option._id, label: option.title }));
+  const tags: TagLabelAndValue[] = (result as TagModel[]).map(option => ({ value: option._id, label: option.title }));
   res.json(tags);
 }
