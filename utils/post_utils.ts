@@ -22,11 +22,12 @@ async function getPostsFromDB(postId?: string): Promise<Post[]> {
 
   const aggregations: Document[] = [      
     { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "author" } },
+    { $lookup: { from: "users", localField: "likes", foreignField: "_id", as: "likes" } },
     { $lookup: { from: "tags", localField: "tags", foreignField: "_id", as: "tags" } },
     { $lookup: { from: "comments", localField: "comments", foreignField: "_id", as: "comments" } },
     { $unwind: { path: "$author" } },
     { $project: { _id: 0, id: { $toString: '$_id' }, timestamp: { $toDate: '$_id' }, title: 1, subtitle: 1, body: 1,
-      tags: "$tags.title", author: "$author.username", read_time: 1, comments: 1 } }
+      tags: "$tags.title", author: "$author.username", read_time: 1, comments: 1, likes: { $size: '$likes' } } }
   ];
 
   if (postId) {
