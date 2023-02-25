@@ -47,9 +47,11 @@ const GlobalStyle = createGlobalStyle`
   }
 
   a {
-    color: ${({ theme }) => theme.text.link};
+    transition: color 200ms;
+    color: ${({ theme }) => theme.text.primary};
     text-decoration: none;
     &:hover {
+      color: ${({ theme }) => theme.text.link};
       text-decoration: underline;
     }
   }

@@ -1,7 +1,7 @@
 import Post from "@/types/Post";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 interface Props {
     post: Post;
@@ -10,6 +10,7 @@ interface Props {
 const PostPreview: React.FC<Props> = ({ post }) => {
   const router = useRouter();
   const isPostPage = router.pathname === '/post/[id]';
+  const queryTags = Array.isArray(router.query.tags) ? router.query.tags : router.query.tags?.split(',');
   
   return (
     <Container>
@@ -17,13 +18,15 @@ const PostPreview: React.FC<Props> = ({ post }) => {
         {isPostPage ? post.title : <Link href={'/post/' + post.id}>{post.title}</Link>}
       </h2>
       <Subtitle>
-        <Author>{post.author}</Author>
+        <Link href={'/user/' + post.author}>{post.author}</Link>
         <span>•</span>
         <Likes>{post.likes} ♥</Likes>
         <span>•</span>
         <ReadTime>{post.read_time} minutes</ReadTime>
         <span>•</span>
-        <Tags>{post.tags?.join(", ")}</Tags>
+        <ul style={{ display: 'contents' }}>
+          {post.tags?.map((tag, index) => <Tag key={tag} text={tag} isCurrent={!!queryTags?.includes(tag)} last={index === post.tags.length - 1} />)}
+        </ul>
         <span>•</span>
         <CommentsCount>{post.comments?.length} comments</CommentsCount>
       </Subtitle>
@@ -32,10 +35,16 @@ const PostPreview: React.FC<Props> = ({ post }) => {
   );
 };
 
+const Tag = ({ text, isCurrent, last }: {text: string, isCurrent: boolean, last: boolean}) => {
+  const content = text + (last ? '' : ',');
+  return (
+    <StyledTag isCurrent={isCurrent}>
+      {isCurrent ? content : <Link href={'/?tags=' + text}>{content}</Link>}
+    </StyledTag>
+  );
+};
+
 const Container = styled.article`
-  h2 a {
-    color: ${({ theme }) => theme.text.primary};
-  }
   padding-block: 2em;
   border-block-end: 1px solid ${({ theme }) => theme.border.primary};
 `;
@@ -51,13 +60,14 @@ const Author = styled.span`
   
 `;
 
+const StyledTag = styled.li<{isCurrent: boolean}>`
+  ${({ isCurrent, theme }) => isCurrent && css`color: ${theme.text.link}`} 
+`;
+
 const Likes = styled.span`
   
 `;
 const ReadTime = styled.span`
-  
-`;
-const Tags = styled.span`
   
 `;
 

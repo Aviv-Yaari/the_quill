@@ -16,7 +16,13 @@ interface PostFromAggregation extends Omit<Post, 'timestamp'> {
   timestamp: string;
 }
 
-async function getPostsFromDB(postId?: string): Promise<Post[]> {
+interface Filters {
+  postId?: string;
+  username?: string;
+  tags?: string[];
+}
+
+async function getPostsFromDB(filters?: Filters): Promise<Post[]> {
   const client = await clientPromise;
   const db = client.db("main");
 
@@ -30,8 +36,16 @@ async function getPostsFromDB(postId?: string): Promise<Post[]> {
       tags: "$tags.title", author: "$author.username", read_time: 1, comments: 1, likes: { $size: '$likes' } } }
   ];
 
-  if (postId) {
-    aggregations.unshift({ $match: { _id: new ObjectId(postId) } });
+  if (filters?.postId) {
+    aggregations.unshift({ $match: { _id: new ObjectId(filters.postId) } });
+  }
+
+  if (filters?.username) {
+    aggregations.push({ $match: { author: filters.username } }); // the $match filter should be after the author is aggregated
+  }
+
+  if (filters?.tags) {
+    aggregations.push({ $match: { tags: { $in: filters.tags } } });
   }
 
   const result = await db

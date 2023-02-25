@@ -3,7 +3,7 @@ import Link from "next/link";
 import styled from "styled-components";
 
 const Navbar = () => {
-  const username = 'avivyar';
+  const username = 'avivyaari';
 
   return (
     <Container>

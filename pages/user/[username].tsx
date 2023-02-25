@@ -1,17 +1,16 @@
 import PostPreview from "@/components/PostPreview";
 import Post from "@/types/Post";
-import axios from "axios";
+import { getPostsFromDB } from "@/utils/post_utils";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 
-export default function UserPage() {
+interface Props {
+  posts: Post[];
+}
+
+export default function UserPage({ posts }: Props) {
   const router = useRouter();
-  const [posts, setPosts] = useState<Post[]>();
   const { username } = router.query;
-
-  useEffect(() => {
-    axios.get('/api/post').then(res => setPosts(res.data));
-  }, []);
 
   return (
     <>
@@ -20,3 +19,9 @@ export default function UserPage() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const username = context.query.username as string;
+  const posts = await getPostsFromDB({ username });
+  return { props: { posts } };
+};

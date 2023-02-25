@@ -11,6 +11,7 @@ interface Props {
 }
 
 export default function Home({ posts }: Props) {
+  
   return (
     <>
       <Head>
@@ -27,8 +28,9 @@ export default function Home({ posts }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {    
-  const posts = await getPostsFromDB();
+export const getServerSideProps: GetServerSideProps = async (context) => {    
+  const tags = Array.isArray(context.query.tags) ? context.query.tags : context.query.tags?.split(',');
+  const posts = await getPostsFromDB({ tags });
   return { props: { posts } };
 };
 
