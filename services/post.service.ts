@@ -70,25 +70,25 @@ async function createPostInDB({ title, subtitle, body, tags }: CreatePostRequest
 /**
  * Likes/Unlikes a post
  */
+// $addToSet: { likes: new ObjectId(userId) as any }
+// $pull: { likes: new ObjectId(userId) }
 async function togglePostLike(postId: string, userId: string) {
   const client = await clientPromise;
   const db = client.db("main");
-  db.collection("posts").findOneAndUpdate({
-    _id: new ObjectId(postId)
-  },
-  {
-    $addToSet: { likes: new ObjectId(userId) }
-    // $set: {
-    // likes: {
-    // $cond: {
-    //   if: { $in: [userId, "$likes"] },
-    //   then: { $pull: { likes: userId } },
-    //   else: { $addToSet: { likes: userId } },
-    // },
-    // },
-    // }
-  });
-  return true;
+  
+  // like the post
+  let result = await db.collection("posts").findOneAndUpdate(
+    { _id: new ObjectId(postId), likes: { $in: [new ObjectId(userId)] } },
+    { $pull: { likes: new ObjectId(userId) as any } } // TODO: check about the types error here
+  );
+
+  if (!result.value) {
+    // like operation didn't succeed - unlike the post
+    result = await db.collection("posts").findOneAndUpdate(
+      { _id: new ObjectId(postId), likes: { $nin: [new ObjectId(userId)] } },
+      { $addToSet: { likes: new ObjectId(userId) as any } } // TODO: check about the types error here
+    );
+  }
 }
 
 export { calcReadTime, getPostsFromDB, createPostInDB, togglePostLike };

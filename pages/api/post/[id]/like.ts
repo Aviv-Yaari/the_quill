@@ -6,7 +6,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const id = readSingleValueFromQuery(req.query, 'id');
 
   if (id && req.method === 'PATCH') {
-    await togglePostLike(id, "63f7448001746820e5306dda"); // TODO: Use the user from jwt
+    await togglePostLike(id, "63f7448001746820e5306dda"); // TODO: Use the user from jwt    
     res.json("success");
   }
   else {

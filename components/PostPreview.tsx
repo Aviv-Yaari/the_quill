@@ -14,8 +14,11 @@ const PostPreview: React.FC<Props> = ({ post }) => {
   const isPostPage = router.pathname === '/post/[id]';
   const queryTags = readMultipleValuesFromQuery(router.query, 'tags');
 
-  const toggleLike = () =>{
-    axios.patch(`/api/post/${post.id}/like`);
+  const toggleLike = async () =>{
+    await axios.patch(`/api/post/${post.id}/like`);
+    const updatedPost = await axios.get('/api/post/' + post.id);
+    console.log(updatedPost);
+    
   };
   
   return (
