@@ -1,4 +1,6 @@
 import Post from "@/types/Post";
+import { readMultipleValuesFromQuery } from "@/utils/general_utils";
+import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import styled, { css } from "styled-components";
@@ -10,7 +12,11 @@ interface Props {
 const PostPreview: React.FC<Props> = ({ post }) => {
   const router = useRouter();
   const isPostPage = router.pathname === '/post/[id]';
-  const queryTags = Array.isArray(router.query.tags) ? router.query.tags : router.query.tags?.split(',');
+  const queryTags = readMultipleValuesFromQuery(router.query, 'tags');
+
+  const toggleLike = () =>{
+    axios.patch(`/api/post/${post.id}/like`);
+  };
   
   return (
     <Container>
@@ -20,7 +26,7 @@ const PostPreview: React.FC<Props> = ({ post }) => {
       <Subtitle>
         <Link href={'/user/' + post.author}>{post.author}</Link>
         <span>•</span>
-        <Likes>{post.likes} ♥</Likes>
+        <button onClick={toggleLike}>{post.likes} ♥</button>
         <span>•</span>
         <ReadTime>{post.read_time} minutes</ReadTime>
         <span>•</span>
@@ -52,6 +58,7 @@ const Container = styled.article`
 const Subtitle = styled.span`
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.5em;
   margin-block-end: 1em;
 `;

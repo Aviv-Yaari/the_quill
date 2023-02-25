@@ -1,4 +1,5 @@
 import type Post from '@/types/Post';
+import { readMultipleValuesFromQuery } from '@/utils/general_utils';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import PostPreview from './PostPreview';
@@ -9,7 +10,7 @@ interface Props {
 
 const PostList = ({ posts }: Props) => {
   const router = useRouter();
-  const tags = Array.isArray(router.query.tags) ? router.query.tags : router.query.tags?.split(',');
+  const tags = readMultipleValuesFromQuery(router.query, 'tags');
 
   return (
     <Container>

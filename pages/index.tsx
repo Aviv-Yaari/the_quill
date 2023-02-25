@@ -2,7 +2,8 @@ import Filters from "@/components/Filters";
 import PostList from "@/components/PostList";
 import { GridLayout } from "@/styles/helpers";
 import Post from "@/types/Post";
-import { getPostsFromDB } from "@/utils/post_utils";
+import { readMultipleValuesFromQuery } from "@/utils/general_utils";
+import { getPostsFromDB } from "@/services/post.service";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 
@@ -29,7 +30,7 @@ export default function Home({ posts }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {    
-  const tags = Array.isArray(context.query.tags) ? context.query.tags : context.query.tags?.split(',');
+  const tags = readMultipleValuesFromQuery(context.query, 'tags');
   const posts = await getPostsFromDB({ tags });
   return { props: { posts } };
 };

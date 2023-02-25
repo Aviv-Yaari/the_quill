@@ -1,6 +1,7 @@
-import clientPromise from "./mongodb";
+import clientPromise from "../utils/mongodb";
 import { Document, ObjectId } from 'mongodb';
 import type Post from '@/types/Post';
+import { CreatePostRequestBody, GetPostsFilters, PostFromAggregation } from "@/types/Post";
 
 /**
  * Returns reading time of a text (in minutes)
@@ -12,17 +13,10 @@ function calcReadTime(text: string): number {
   return time;
 }
 
-interface PostFromAggregation extends Omit<Post, 'timestamp'> {
-  timestamp: string;
-}
-
-interface Filters {
-  postId?: string;
-  username?: string;
-  tags?: string[];
-}
-
-async function getPostsFromDB(filters?: Filters): Promise<Post[]> {
+/**
+ * Returns a query of posts from the database, filtered by the given filters.
+ */
+async function getPostsFromDB(filters?: GetPostsFilters): Promise<Post[]> {
   const client = await clientPromise;
   const db = client.db("main");
 
@@ -59,4 +53,42 @@ async function getPostsFromDB(filters?: Filters): Promise<Post[]> {
   return posts;
 }
 
-export { calcReadTime, getPostsFromDB };
+/**
+ * Creates a post in the database
+ */
+async function createPostInDB({ title, subtitle, body, tags }: CreatePostRequestBody) {
+  const client = await clientPromise;
+  const db = client.db("main");
+  const readTime = calcReadTime(body);
+  const tagIds = tags.map(tag => new ObjectId(tag));
+  const author = new ObjectId("63f7448001746820e5306dda"); // TODO: Use the user from jwt
+  
+  const result = await db.collection("posts").insertOne({ title, subtitle, body, tags: tagIds, author, read_time: readTime, comments: [], likes: [] });
+  return result.insertedId.toString();
+}
+
+/**
+ * Likes/Unlikes a post
+ */
+async function togglePostLike(postId: string, userId: string) {
+  const client = await clientPromise;
+  const db = client.db("main");
+  db.collection("posts").findOneAndUpdate({
+    _id: new ObjectId(postId)
+  },
+  {
+    $addToSet: { likes: new ObjectId(userId) }
+    // $set: {
+    // likes: {
+    // $cond: {
+    //   if: { $in: [userId, "$likes"] },
+    //   then: { $pull: { likes: userId } },
+    //   else: { $addToSet: { likes: userId } },
+    // },
+    // },
+    // }
+  });
+  return true;
+}
+
+export { calcReadTime, getPostsFromDB, createPostInDB, togglePostLike };

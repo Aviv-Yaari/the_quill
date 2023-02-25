@@ -1,6 +1,6 @@
 import PostPreview from "@/components/PostPreview";
 import Post from "@/types/Post";
-import { getPostsFromDB } from "@/utils/post_utils";
+import { getPostsFromDB } from "@/services/post.service";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 

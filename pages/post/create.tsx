@@ -4,10 +4,12 @@ import axios from "axios";
 import { FormEventHandler, useEffect, useState } from "react";
 import styled from "styled-components";
 import TagSelect from "@/components/shared/TagSelect";
+import { useRouter } from "next/router";
 
 export default function CreatePost() {
   const [allTags, setAllTags] = useState<TagLabelAndValue[]>();
   const [selectedTags, setSelectedTags] = useState<TagLabelAndValue[]>();
+  const router = useRouter();
 
   useEffect(() => { 
     axios.get('/api/tag').then(res => setAllTags(res.data));
@@ -20,8 +22,8 @@ export default function CreatePost() {
     const subtitle = formData.get("subtitle");
     const body = formData.get("body");
     const tagIDs = selectedTags?.map(tag => tag.value);
-    await axios.post("/api/post", { title, subtitle, body, tags: tagIDs });
-    alert('success!');
+    const result = await axios.post("/api/post", { title, subtitle, body, tags: tagIDs });
+    result.data?.id && router.push('/post/' + result.data.id);
   };
 
   return (

@@ -8,4 +8,19 @@ interface Post extends Pick<PostModel, 'title' | 'subtitle' | 'author' | 'body' 
     likes: number;
 }
 
+interface PostFromAggregation extends Omit<Post, 'timestamp'> {
+    timestamp: string;
+}
+  
+interface GetPostsFilters {
+    postId?: string;
+    username?: string;
+    tags?: string[];
+}
+
+interface CreatePostRequestBody extends NextApiRequest, Pick<Post, 'title' | 'subtitle' | 'body' | 'tags'> {
+};
+  
+
+export { PostFromAggregation, GetPostsFilters, CreatePostRequestBody };
 export default Post;
