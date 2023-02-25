@@ -2,6 +2,7 @@ import clientPromise from "../utils/mongodb";
 import { Document, ObjectId } from 'mongodb';
 import type Post from '@/types/Post';
 import { CreatePostRequestBody, GetPostsFilters, PostFromAggregation } from "@/types/Post";
+import userMock from '@/mocks/user.mock.json';
 
 /**
  * Returns reading time of a text (in minutes)
@@ -19,15 +20,17 @@ function calcReadTime(text: string): number {
 async function getPostsFromDB(filters?: GetPostsFilters): Promise<Post[]> {
   const client = await clientPromise;
   const db = client.db("main");
+  const userId = userMock.id;
 
   const aggregations: Document[] = [      
     { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "author" } },
     { $lookup: { from: "users", localField: "likes", foreignField: "_id", as: "likes" } },
     { $lookup: { from: "tags", localField: "tags", foreignField: "_id", as: "tags" } },
     { $lookup: { from: "comments", localField: "comments", foreignField: "_id", as: "comments" } },
+    { $addFields: { isLikedByUser: { $in: [new ObjectId(userId), "$likes._id"] } } },
     { $unwind: { path: "$author" } },
     { $project: { _id: 0, id: { $toString: '$_id' }, timestamp: { $toDate: '$_id' }, title: 1, subtitle: 1, body: 1,
-      tags: "$tags.title", author: "$author.username", read_time: 1, comments: 1, likes: { $size: '$likes' } } }
+      tags: "$tags.title", author: "$author.username", read_time: 1, comments: 1, likes: { $size: '$likes' }, isLikedByUser: 1 } }
   ];
 
   if (filters?.postId) {
@@ -50,45 +53,43 @@ async function getPostsFromDB(filters?: GetPostsFilters): Promise<Post[]> {
 
   const postsFromAggregation = result as PostFromAggregation[];
   const posts: Post[] = postsFromAggregation.map(post => ({ ...post, timestamp: Date.parse(post.timestamp) }));
+  console.log({ posts });
+  
   return posts;
 }
 
-/**
- * Creates a post in the database
- */
 async function createPostInDB({ title, subtitle, body, tags }: CreatePostRequestBody) {
   const client = await clientPromise;
   const db = client.db("main");
   const readTime = calcReadTime(body);
   const tagIds = tags.map(tag => new ObjectId(tag));
-  const author = new ObjectId("63f7448001746820e5306dda"); // TODO: Use the user from jwt
+  const author = new ObjectId(userMock.id); // TODO: Use the user from jwt
   
   const result = await db.collection("posts").insertOne({ title, subtitle, body, tags: tagIds, author, read_time: readTime, comments: [], likes: [] });
   return result.insertedId.toString();
 }
 
-/**
- * Likes/Unlikes a post
- */
-// $addToSet: { likes: new ObjectId(userId) as any }
-// $pull: { likes: new ObjectId(userId) }
-async function togglePostLike(postId: string, userId: string) {
+async function toggleLike(postId: string, action: 'like' | 'unlike') {
   const client = await clientPromise;
   const db = client.db("main");
-  
-  // like the post
-  let result = await db.collection("posts").findOneAndUpdate(
-    { _id: new ObjectId(postId), likes: { $in: [new ObjectId(userId)] } },
-    { $pull: { likes: new ObjectId(userId) as any } } // TODO: check about the types error here
-  );
+  const userId = userMock.id; // TODO: Use the user from jwt
 
-  if (!result.value) {
-    // like operation didn't succeed - unlike the post
-    result = await db.collection("posts").findOneAndUpdate(
-      { _id: new ObjectId(postId), likes: { $nin: [new ObjectId(userId)] } },
-      { $addToSet: { likes: new ObjectId(userId) as any } } // TODO: check about the types error here
-    );
+  let dbAction;
+  if (action === 'like') {
+    dbAction = { $addToSet: { likes: new ObjectId(userId) as any } }; // TODO: check about the types error here
+  } else {
+    dbAction = { $pull: { likes: new ObjectId(userId) as any } }; // TODO: check about the types error here
   }
+  const result = await db.collection("posts").findOneAndUpdate(
+    { _id: new ObjectId(postId) },
+    dbAction,
+    { returnDocument: 'after' }
+  );
+  
+  if (!result.lastErrorObject?.n) {
+    throw 'Update did not succeed';
+  }
+  return result.value;
 }
 
-export { calcReadTime, getPostsFromDB, createPostInDB, togglePostLike };
+export { calcReadTime, getPostsFromDB, createPostInDB, toggleLike };

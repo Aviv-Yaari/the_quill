@@ -7,6 +7,7 @@ declare module 'styled-components' {
       primary: string;
       secondary: string;
       link: string;
+      liked: string;
     },
     border: {
       primary: string;

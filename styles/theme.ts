@@ -4,7 +4,8 @@ const theme: DefaultTheme = {
   text: {
     primary: '#111',
     secondary: '#0070f3',
-    link: '#285ae6'
+    link: '#285ae6',
+    liked: '#EB455F'
   },
   background: {
     primary: '#f6eade',

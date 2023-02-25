@@ -3,6 +3,7 @@ import { readMultipleValuesFromQuery } from "@/utils/general_utils";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import styled, { css } from "styled-components";
 
 interface Props {
@@ -13,14 +14,17 @@ const PostPreview: React.FC<Props> = ({ post }) => {
   const router = useRouter();
   const isPostPage = router.pathname === '/post/[id]';
   const queryTags = readMultipleValuesFromQuery(router.query, 'tags');
+  const [likes, setLikes] = useState(post.likes); // TODO: move to redux
+  const [isLikedByUser, setIsLikedByUser] = useState(post.isLikedByUser); // TODO: move to redux
 
-  const toggleLike = async () =>{
-    await axios.patch(`/api/post/${post.id}/like`);
-    const updatedPost = await axios.get('/api/post/' + post.id);
-    console.log(updatedPost);
-    
+  const toggleLike = async () => {
+    const result = await axios.patch(`/api/post/${post.id}/${isLikedByUser ? 'unlike' : 'like'}`);
+    if (result.data?.likes) {
+      setLikes(result.data.likes.length);
+      setIsLikedByUser(state => !state);
+    }
   };
-  
+
   return (
     <Container>
       <h2>
@@ -29,7 +33,7 @@ const PostPreview: React.FC<Props> = ({ post }) => {
       <Subtitle>
         <Link href={'/user/' + post.author}>{post.author}</Link>
         <span>•</span>
-        <button onClick={toggleLike}>{post.likes} ♥</button>
+        <Likes isLikedByUser={isLikedByUser} onClick={toggleLike}>{likes} ♥</Likes>
         <span>•</span>
         <ReadTime>{post.read_time} minutes</ReadTime>
         <span>•</span>
@@ -71,11 +75,16 @@ const Author = styled.span`
 `;
 
 const StyledTag = styled.li<{isCurrent: boolean}>`
-  ${({ isCurrent, theme }) => isCurrent && css`color: ${theme.text.link}`} 
+  ${({ isCurrent, theme }) => isCurrent && css`color: ${theme.text.link}`};
 `;
 
-const Likes = styled.span`
-  
+const Likes = styled.button<{isLikedByUser: boolean}>`
+  transition: color 200ms;
+  ${({ isLikedByUser, theme }) => isLikedByUser && css`color: ${theme.text.liked}`};
+
+  &:hover {
+    color: ${({ theme }) => theme.text.liked}; 
+  }
 `;
 const ReadTime = styled.span`
   

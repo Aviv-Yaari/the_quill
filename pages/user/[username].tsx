@@ -1,8 +1,8 @@
-import PostPreview from "@/components/PostPreview";
 import Post from "@/types/Post";
 import { getPostsFromDB } from "@/services/post.service";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
+import PostList from "@/components/PostList";
 
 interface Props {
   posts: Post[];
@@ -15,7 +15,7 @@ export default function UserPage({ posts }: Props) {
   return (
     <>
       <h2>{username}</h2>
-      {posts?.map(post => <PostPreview key={post.id as string} post={post} />)}
+      <PostList posts={posts} />
     </>
   );
 }

@@ -6,6 +6,7 @@ interface Post extends Pick<PostModel, 'title' | 'subtitle' | 'author' | 'body' 
     comments: { author: string; body: string; }[];
     timestamp: number;
     likes: number;
+    isLikedByUser: boolean;
 }
 
 interface PostFromAggregation extends Omit<Post, 'timestamp'> {
