@@ -1,4 +1,4 @@
-import LoadingSpinner from '@/assets/loading_spinner.svg';
+import LoadingSpinner from '@/public/loading_spinner.svg';
 import Image from 'next/image';
 
 interface Props extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
