@@ -37,7 +37,7 @@ export default function Home({ posts, allTags }: Props) {
       </Head>
       <GridLayout>
         {posts && <PostList posts={posts} />}
-        {<Filters selectedTags={tagsFromUrl?.map(tag => ({ label: tag, value: tag }))} allTags={allTags} onFilter={handleFilter} />}
+        {<Filters selectedTags={tagsFromUrl?.map(tag => ({ label: tag, value: tag }))} allTags={allTags} onFilter={handleFilter} defaultKeywords={keywordsFromUrl} />}
       </GridLayout>
     </>
   );

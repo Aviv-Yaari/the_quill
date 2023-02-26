@@ -8,9 +8,10 @@ interface Props {
   selectedTags?: TagLabelAndValue[];
   onFilter: (filters: { tags?: string[], keywords?: string }) => void;
   hideTagFilters?: boolean;
+  defaultKeywords?: string;
 }
 
-const Filters = ({ allTags, selectedTags, onFilter, hideTagFilters }: Props) => {
+const Filters = ({ allTags, selectedTags, onFilter, hideTagFilters, defaultKeywords }: Props) => {
   const keywordsRef = useRef<HTMLInputElement>(null);
   return (
     <Container>
@@ -18,7 +19,7 @@ const Filters = ({ allTags, selectedTags, onFilter, hideTagFilters }: Props) => 
         <h2>Filter</h2>
         <Keywords>
           <label htmlFor="keywords">Keywords</label>
-          <input ref={keywordsRef} id="keywords" name="keywords" type="text" onChange={(ev) => onFilter({ tags: selectedTags?.map(tag => tag.label), keywords: ev.target.value })} />
+          <input ref={keywordsRef} id="keywords" name="keywords" type="text" defaultValue={defaultKeywords} onChange={(ev) => onFilter({ tags: selectedTags?.map(tag => tag.label), keywords: ev.target.value })} />
         </Keywords>
         {allTags && !hideTagFilters && (
           <div>
