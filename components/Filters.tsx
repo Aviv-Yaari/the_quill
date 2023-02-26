@@ -1,30 +1,32 @@
 import { TagLabelAndValue } from "@/types/Tag";
+import { useRef } from "react";
 import styled from "styled-components";
 import TagSelect from "./shared/TagSelect";
 
 interface Props {
   allTags: TagLabelAndValue[];
-  defaultTags: TagLabelAndValue[];
-  onFilter: (filters: { tags?: string[] }) => void;
+  selectedTags?: TagLabelAndValue[];
+  onFilter: (filters: { tags?: string[], keywords?: string }) => void;
   hideTagFilters?: boolean;
 }
 
-const Filters = ({ allTags, defaultTags, onFilter, hideTagFilters }: Props) => {
+const Filters = ({ allTags, selectedTags, onFilter, hideTagFilters }: Props) => {
+  const keywordsRef = useRef<HTMLInputElement>(null);
   return (
     <Container>
       <div>
         <h2>Filter</h2>
         <Keywords>
           <label htmlFor="keywords">Keywords</label>
-          <input id="keywords" name="keywords" type="text" />
+          <input ref={keywordsRef} id="keywords" name="keywords" type="text" onChange={(ev) => onFilter({ tags: selectedTags?.map(tag => tag.label), keywords: ev.target.value })} />
         </Keywords>
         {allTags && !hideTagFilters && (
           <div>
             <span>Tags</span>
             <TagSelect 
               options={allTags} 
-              onChange={(tags) => onFilter({ tags: tags.map(tag => tag.label) })}
-              defaultValue={defaultTags}
+              onChange={(tags) => onFilter({ tags: tags.map(tag => tag.label), keywords: keywordsRef.current?.value })}
+              value={selectedTags}
             />
           </div>)}
       </div>

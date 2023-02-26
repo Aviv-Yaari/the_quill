@@ -17,6 +17,7 @@ interface GetPostsFilters {
     postId?: string;
     username?: string;
     tags?: string[];
+    keywords?: string;
 }
 
 interface CreatePostRequestBody extends NextApiRequest, Pick<Post, 'title' | 'subtitle' | 'body' | 'tags'> {

@@ -5,10 +5,10 @@ import styled from "styled-components";
 interface Props {
     options: TagLabelAndValue[];
     onChange: (selected: readonly TagLabelAndValue[]) => any;
-    defaultValue: TagLabelAndValue[];
+    value?: TagLabelAndValue[];
 }
 
-const TagSelect = ({ options, onChange, defaultValue }: Props) => {  
+const TagSelect = ({ options, onChange, value }: Props) => {  
   return (
     <Container>
       <Select 
@@ -16,7 +16,7 @@ const TagSelect = ({ options, onChange, defaultValue }: Props) => {
         isMulti  
         classNames={{ control: (state) => 'input-select' + (state.isFocused ? ' focused' : '') }}
         onChange={onChange}
-        defaultValue={defaultValue}
+        value={value}
       />
     </Container>
   );

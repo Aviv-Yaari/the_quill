@@ -33,6 +33,10 @@ async function getPostsFromDB(filters?: GetPostsFilters): Promise<Post[]> {
       tags: "$tags.title", author: "$author.username", read_time: 1, comments: 1, likes: { $size: '$likes' }, isLikedByUser: 1 } }
   ];
 
+  if (filters?.keywords) {
+    aggregations.unshift({ $match: { $text: { $search: filters.keywords } } });
+  }
+
   if (filters?.postId) {
     aggregations.unshift({ $match: { _id: new ObjectId(filters.postId) } });
   }

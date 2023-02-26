@@ -2,35 +2,29 @@ import Filters, { FilterProps } from "@/components/Filters";
 import PostList from "@/components/PostList";
 import { GridLayout } from "@/styles/helpers";
 import Post from "@/types/Post";
-import { readMultipleValuesFromQuery } from "@/utils/general_utils";
+import { readMultipleValuesFromQuery, readSingleValueFromQuery } from "@/utils/general_utils";
 import { getPostsFromDB } from "@/services/post.service";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { getTagsFromDB } from "@/services/tag.service";
 import { TagLabelAndValue } from "@/types/Tag";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
 
 interface Props {
   posts: Post[];
   allTags: TagLabelAndValue[];
 }
 
-export default function Home({ posts: postsFromProps, allTags }: Props) {
-  const [posts, setPosts] = useState(postsFromProps);
+export default function Home({ posts, allTags }: Props) {
   const router = useRouter();
-  const tagsFromUrl = useMemo(() => readMultipleValuesFromQuery(router.query, 'tags') || [], [router.query]);
+  const tagsFromUrl = useMemo(() => readMultipleValuesFromQuery(router.query, 'tags'), [router.query]);
+  const keywordsFromUrl = useMemo(() => readSingleValueFromQuery(router.query, 'keywords'), [router.query]);
 
-  useEffect(() => {
-    axios.get('/api/post', { params: { tags: tagsFromUrl?.join(',') } }).then(res => setPosts(res.data));
-  }, [tagsFromUrl]);
-
-  const handleFilter: FilterProps['onFilter'] = ({ tags }) => {
-    if (!tags?.length) {
-      return router.push('/');
-    }    
-    router.push(`/?tags=${[...tags].join(',')}`);
+  const handleFilter: FilterProps['onFilter'] = ({ tags = [], keywords }) => {
+    const tagsQuery = tags ? `tags=${[...tags].join(',')}` : '';
+    const keywordsQuery = keywords ? `keywords=${keywords}` : '';
+    router.push('/?' + [tagsQuery, keywordsQuery].join('&'));
   };
   
   return (
@@ -43,7 +37,7 @@ export default function Home({ posts: postsFromProps, allTags }: Props) {
       </Head>
       <GridLayout>
         {posts && <PostList posts={posts} />}
-        {<Filters defaultTags={tagsFromUrl.map(tag => ({ label: tag, value: tag }))} allTags={allTags} onFilter={handleFilter} />}
+        {<Filters selectedTags={tagsFromUrl?.map(tag => ({ label: tag, value: tag }))} allTags={allTags} onFilter={handleFilter} />}
       </GridLayout>
     </>
   );
@@ -51,7 +45,9 @@ export default function Home({ posts: postsFromProps, allTags }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {    
   const tags = readMultipleValuesFromQuery(context.query, 'tags');
-  const [posts, allTags] = await Promise.all([getPostsFromDB({ tags }), getTagsFromDB()]);    
+  const keywords = readSingleValueFromQuery(context.query, 'keywords');
+  
+  const [posts, allTags] = await Promise.all([getPostsFromDB({ tags, keywords }), getTagsFromDB()]);    
   return { props: { posts, allTags } };
 };
 
