@@ -17,7 +17,7 @@ declare module 'styled-components' {
       primary: string;
       secondary: string;
     },
-    buttons: {
+    button: {
       primaryBg: string;
       primaryText: string;
       primaryHoverBg: string;

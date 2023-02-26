@@ -1,17 +1,15 @@
 import { TagLabelAndValue } from "@/types/Tag";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import TagSelect from "./shared/TagSelect";
 
-const Filters = () => {
-  const [allTags, setAllTags] = useState<TagLabelAndValue[]>();
+interface Props {
+  allTags: TagLabelAndValue[];
+}
+
+const Filters = ({ allTags }: Props) => {
   const [selectedTags, setSelectedTags] = useState<TagLabelAndValue[]>();
-
-  useEffect(() => { 
-    axios.get('/api/tag').then(res => setAllTags(res.data));
-  }, []);
-
+  
   return (
     <Container>
       <div>

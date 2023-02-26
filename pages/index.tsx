@@ -6,12 +6,15 @@ import { readMultipleValuesFromQuery } from "@/utils/general_utils";
 import { getPostsFromDB } from "@/services/post.service";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
+import { getTagsFromDB } from "@/services/tag.service";
+import { TagLabelAndValue } from "@/types/Tag";
 
 interface Props {
   posts: Post[];
+  allTags: TagLabelAndValue[];
 }
 
-export default function Home({ posts }: Props) {
+export default function Home({ posts, allTags }: Props) {
   
   return (
     <>
@@ -23,7 +26,7 @@ export default function Home({ posts }: Props) {
       </Head>
       <GridLayout>
         {posts && <PostList posts={posts} />}
-        <Filters/>
+        <Filters allTags={allTags} />
       </GridLayout>
     </>
   );
@@ -31,7 +34,7 @@ export default function Home({ posts }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {    
   const tags = readMultipleValuesFromQuery(context.query, 'tags');
-  const posts = await getPostsFromDB({ tags });
-  return { props: { posts } };
+  const [posts, allTags] = await Promise.all([getPostsFromDB({ tags }), getTagsFromDB()]);    
+  return { props: { posts, allTags } };
 };
 

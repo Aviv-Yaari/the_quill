@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import LinkButton from "./LinkButton";
 
 interface Props {
     href?: string;
@@ -12,9 +13,9 @@ const BackButton = ({ href }: Props) => {
   };
   
   return (
-    <button onClick={handleClick}>
+    <LinkButton onClick={handleClick}>
       ← Back
-    </button>
+    </LinkButton>
   );
 };
 

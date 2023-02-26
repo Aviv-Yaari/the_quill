@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import styled, { css } from "styled-components";
+import Toast from "./shared/Toast";
 
 interface Props {
     post: Post;
@@ -16,17 +17,24 @@ const PostPreview: React.FC<Props> = ({ post }) => {
   const queryTags = readMultipleValuesFromQuery(router.query, 'tags');
   const [likes, setLikes] = useState(post.likes); // TODO: move to redux
   const [isLikedByUser, setIsLikedByUser] = useState(post.isLikedByUser); // TODO: move to redux
+  const [error, setError] = useState<string | null>(); // TODO: Use redux
 
   const toggleLike = async () => {
-    const result = await axios.patch(`/api/post/${post.id}/${isLikedByUser ? 'unlike' : 'like'}`);
-    if (result.data?.likes) {
-      setLikes(result.data.likes.length);
-      setIsLikedByUser(state => !state);
+    try {
+      const result = await axios.patch(`/api/post/${post.id}/${isLikedByUser ? 'unlike' : 'like'}`);
+      if (result.data?.likes) {
+        setLikes(result.data.likes.length);
+        setIsLikedByUser(state => !state);
+      }  
+    } catch (error) {
+      setError("Apologies! An error occurred");
     }
+    
   };
 
   return (
     <Container>
+      {error && <Toast onClose={() => setError(null)}>{error}</Toast>}
       <h2>
         {isPostPage ? post.title : <Link href={'/post/' + post.id}>{post.title}</Link>}
       </h2>

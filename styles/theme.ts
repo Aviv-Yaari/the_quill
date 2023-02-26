@@ -15,11 +15,11 @@ const theme: DefaultTheme = {
     primary: "#aaa",
     secondary: '#ccc'
   },
-  buttons: {
-    primaryBg: '#222831',
+  button: {
+    primaryBg: '#2B3A55',
     secondaryBg: 'white',
     primaryText: 'white',
-    primaryHoverBg: '#393E46',
+    primaryHoverBg: '#181D31',
     secondaryText: '#111',
     secondaryHoverBg: '#eee'
   },

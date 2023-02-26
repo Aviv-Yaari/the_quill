@@ -25,13 +25,9 @@ const GlobalStyle = createGlobalStyle`
   button {
     border: none;
     background: inherit;
-    padding: 1em 0;
     font-family: inherit;
     font-size: 1em;
     cursor: pointer;
-    &:hover {
-      text-decoration: underline;
-    }
   }
 
   input, textarea {
