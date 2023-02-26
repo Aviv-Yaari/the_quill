@@ -1,15 +1,13 @@
 import { TagLabelAndValue } from "@/types/Tag";
-import { useState } from "react";
 import styled from "styled-components";
 import TagSelect from "./shared/TagSelect";
 
 interface Props {
   allTags: TagLabelAndValue[];
+  onFilter: (filters: { tags: string[] }) => void;
 }
 
-const Filters = ({ allTags }: Props) => {
-  const [selectedTags, setSelectedTags] = useState<TagLabelAndValue[]>();
-  
+const Filters = ({ allTags, onFilter }: Props) => {
   return (
     <Container>
       <div>
@@ -23,12 +21,9 @@ const Filters = ({ allTags }: Props) => {
             <span>Tags</span>
             <TagSelect 
               options={allTags} 
-              onChange={(selected) => setSelectedTags([...selected])}
+              onChange={(tags) => onFilter({ tags: tags.map(tag => tag.label) })}
             />
           </div>)}
-        <div>
-          <span>Likes</span>
-        </div>
       </div>
     </Container>
   );
@@ -50,3 +45,4 @@ const Keywords = styled.div`
 `;
 
 export default Filters;
+export type { Props as FilterProps };

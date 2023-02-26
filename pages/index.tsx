@@ -1,4 +1,4 @@
-import Filters from "@/components/Filters";
+import Filters, { FilterProps } from "@/components/Filters";
 import PostList from "@/components/PostList";
 import { GridLayout } from "@/styles/helpers";
 import Post from "@/types/Post";
@@ -8,13 +8,22 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { getTagsFromDB } from "@/services/tag.service";
 import { TagLabelAndValue } from "@/types/Tag";
+import { useState } from "react";
+import axios from "axios";
 
 interface Props {
   posts: Post[];
   allTags: TagLabelAndValue[];
 }
 
-export default function Home({ posts, allTags }: Props) {
+export default function Home({ posts: postsFromProps, allTags }: Props) {
+  const [posts, setPosts] = useState(postsFromProps);
+
+  const handleFilter: FilterProps['onFilter'] = async ({ tags }) => {
+    const result = await axios.get('/api/post', { params: { tags: tags.join(',') } });
+    const filteredPosts = result.data;
+    setPosts(filteredPosts);
+  };
   
   return (
     <>
@@ -26,7 +35,7 @@ export default function Home({ posts, allTags }: Props) {
       </Head>
       <GridLayout>
         {posts && <PostList posts={posts} />}
-        <Filters allTags={allTags} />
+        <Filters allTags={allTags} onFilter={handleFilter} />
       </GridLayout>
     </>
   );

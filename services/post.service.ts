@@ -41,7 +41,7 @@ async function getPostsFromDB(filters?: GetPostsFilters): Promise<Post[]> {
     aggregations.push({ $match: { author: filters.username } }); // the $match filter should be after the author is aggregated
   }
 
-  if (filters?.tags) {
+  if (filters?.tags?.length) {
     aggregations.push({ $match: { tags: { $in: filters.tags } } });
   }
 
@@ -53,7 +53,6 @@ async function getPostsFromDB(filters?: GetPostsFilters): Promise<Post[]> {
 
   const postsFromAggregation = result as PostFromAggregation[];
   const posts: Post[] = postsFromAggregation.map(post => ({ ...post, timestamp: Date.parse(post.timestamp) }));
-  console.log({ posts });
   
   return posts;
 }
