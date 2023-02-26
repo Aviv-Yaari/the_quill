@@ -8,7 +8,8 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { getTagsFromDB } from "@/services/tag.service";
 import { TagLabelAndValue } from "@/types/Tag";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/router";
 import axios from "axios";
 
 interface Props {
@@ -18,11 +19,18 @@ interface Props {
 
 export default function Home({ posts: postsFromProps, allTags }: Props) {
   const [posts, setPosts] = useState(postsFromProps);
+  const router = useRouter();
+  const tagsFromUrl = useMemo(() => readMultipleValuesFromQuery(router.query, 'tags') || [], [router.query]);
 
-  const handleFilter: FilterProps['onFilter'] = async ({ tags }) => {
-    const result = await axios.get('/api/post', { params: { tags: tags.join(',') } });
-    const filteredPosts = result.data;
-    setPosts(filteredPosts);
+  useEffect(() => {
+    axios.get('/api/post', { params: { tags: tagsFromUrl?.join(',') } }).then(res => setPosts(res.data));
+  }, [tagsFromUrl]);
+
+  const handleFilter: FilterProps['onFilter'] = ({ tags }) => {
+    if (!tags?.length) {
+      return router.push('/');
+    }    
+    router.push(`/?tags=${[...tags].join(',')}`);
   };
   
   return (
@@ -35,7 +43,7 @@ export default function Home({ posts: postsFromProps, allTags }: Props) {
       </Head>
       <GridLayout>
         {posts && <PostList posts={posts} />}
-        <Filters allTags={allTags} onFilter={handleFilter} />
+        {<Filters defaultTags={tagsFromUrl.map(tag => ({ label: tag, value: tag }))} allTags={allTags} onFilter={handleFilter} />}
       </GridLayout>
     </>
   );

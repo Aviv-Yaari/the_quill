@@ -46,22 +46,17 @@ const PostPreview: React.FC<Props> = ({ post }) => {
         <ReadTime>{post.read_time} minutes</ReadTime>
         <span>•</span>
         <ul style={{ display: 'contents' }}>
-          {post.tags?.map((tag, index) => <Tag key={tag} text={tag} isCurrent={!!queryTags?.includes(tag)} last={index === post.tags.length - 1} />)}
+          {post.tags.map((tag, index) => 
+            <StyledTag key={tag} isCurrent={!!queryTags?.includes(tag)}>
+              {tag + (index === post.tags.length - 1 ? '' : ', ')}
+            </StyledTag>
+          )}
         </ul>
         <span>•</span>
         <CommentsCount>{post.comments?.length} comments</CommentsCount>
       </Subtitle>
       <p>{post.body}</p>
     </Container>
-  );
-};
-
-const Tag = ({ text, isCurrent, last }: {text: string, isCurrent: boolean, last: boolean}) => {
-  const content = text + (last ? '' : ',');
-  return (
-    <StyledTag isCurrent={isCurrent}>
-      {isCurrent ? content : <Link href={'/?tags=' + text}>{content}</Link>}
-    </StyledTag>
   );
 };
 

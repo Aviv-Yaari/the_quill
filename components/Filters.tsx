@@ -4,10 +4,12 @@ import TagSelect from "./shared/TagSelect";
 
 interface Props {
   allTags: TagLabelAndValue[];
-  onFilter: (filters: { tags: string[] }) => void;
+  defaultTags: TagLabelAndValue[];
+  onFilter: (filters: { tags?: string[] }) => void;
+  hideTagFilters?: boolean;
 }
 
-const Filters = ({ allTags, onFilter }: Props) => {
+const Filters = ({ allTags, defaultTags, onFilter, hideTagFilters }: Props) => {
   return (
     <Container>
       <div>
@@ -16,12 +18,13 @@ const Filters = ({ allTags, onFilter }: Props) => {
           <label htmlFor="keywords">Keywords</label>
           <input id="keywords" name="keywords" type="text" />
         </Keywords>
-        {allTags &&(
+        {allTags && !hideTagFilters && (
           <div>
             <span>Tags</span>
             <TagSelect 
               options={allTags} 
               onChange={(tags) => onFilter({ tags: tags.map(tag => tag.label) })}
+              defaultValue={defaultTags}
             />
           </div>)}
       </div>
