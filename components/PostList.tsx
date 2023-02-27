@@ -15,7 +15,6 @@ const PostList = ({ posts }: Props) => {
 };
 
 const Container = styled.section`
-  grid-row: 2;
 `;
 
 export default PostList;

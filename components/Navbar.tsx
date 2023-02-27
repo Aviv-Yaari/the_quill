@@ -1,4 +1,4 @@
-import { GridLayout } from "@/styles/helpers";
+import { AppLayout } from "@/styles/helpers";
 import Link from "next/link";
 import styled from "styled-components";
 
@@ -6,32 +6,39 @@ const Navbar = () => {
   const username = 'avivyaari';
 
   return (
-    <Container>
-      <h1><Link href="/">The Quill</Link></h1>
-      <Actions>
-        <Link href="/post/create">Create a post</Link>
-        <Link href={`/user/${username}`}>{username}</Link>
-      </Actions>
-    </Container>
+    <Layout>
+      <Container>
+        <h1><Link href="/">The Quill</Link></h1>
+        <Actions>
+          <Link href="/post/create">Create a post</Link>
+          <Link href={`/user/${username}`}>{username}</Link>
+        </Actions>
+      </Container>
+    </Layout>
   );
 };
 
-const Container = styled(GridLayout)`
+const Layout = styled(AppLayout)`
+border-bottom: 1px dashed black;
+`;
+
+const Container = styled.div`
+ display: flex;
+ justify-content: space-between;
   align-items: center;
   background-color: ${({ theme }) => theme.background.primary};
   position: sticky;
   top: 0;
-  border-bottom: 1px dashed black;
 
   a {
     color: inherit;
-  }
+  } 
 `;
 
-const Actions = styled(GridLayout)`
+const Actions = styled.div`
+align-items: center;
   display: flex;
   gap: 16px;
-  justify-self: flex-end;
 `;
 
 export default Navbar;

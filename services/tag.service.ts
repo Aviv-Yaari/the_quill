@@ -11,7 +11,7 @@ async function getTagsFromDB() {
     .find({})
     .toArray();
   
-  const tags: TagLabelAndValue[] = (result as TagModel[]).map(option => ({ value: option.title, label: option.title }));
+  const tags: TagLabelAndValue[] = (result as TagModel[]).map(option => ({ value: option._id.toString(), label: option.title }));
   return tags;
 }
 

@@ -11,7 +11,7 @@ interface Props {
 export default function PostPage({ post }: Props) {
   return (
     <>
-      {post && <PostPreview post={post} onLike={() =>{}} onUnlike={() => {}} /> } {/* // TODO: fix onLike and onUnlike */}
+      {post && <PostPreview post={post} /> } {/* // TODO: fix onLike and onUnlike */}
     </>
   );
 };

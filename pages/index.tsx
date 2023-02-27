@@ -1,6 +1,5 @@
 import Filters, { FilterProps } from "@/components/Filters";
 import PostList from "@/components/PostList";
-import { GridLayout } from "@/styles/helpers";
 import Post from "@/types/Post";
 import { readMultipleValuesFromQuery, readSingleValueFromQuery } from "@/utils/general_utils";
 import { getPostsFromDB } from "@/services/post.service";
@@ -8,18 +7,18 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { getTagsFromDB } from "@/services/tag.service";
 import { TagLabelAndValue } from "@/types/Tag";
-import { useMemo } from "react";
 import { useRouter } from "next/router";
+import { GridLayout } from "@/styles/helpers";
 
 interface Props {
   posts: Post[];
   allTags: TagLabelAndValue[];
+  selectedTags: TagLabelAndValue[];
+  keywords: string;
 }
 
-export default function Home({ posts, allTags }: Props) {
+export default function Home({ posts, allTags, selectedTags, keywords }: Props) {
   const router = useRouter();
-  const tagsFromUrl = useMemo(() => readMultipleValuesFromQuery(router.query, 'tags'), [router.query]);
-  const keywordsFromUrl = useMemo(() => readSingleValueFromQuery(router.query, 'keywords'), [router.query]);
 
   const handleFilter: FilterProps['onFilter'] = ({ tags = [], keywords }) => {
     const tagsQuery = tags ? `tags=${[...tags].join(',')}` : '';
@@ -36,8 +35,8 @@ export default function Home({ posts, allTags }: Props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <GridLayout>
+        <Filters selectedTags={selectedTags} allTags={allTags} onFilter={handleFilter} defaultKeywords={keywords} />
         {posts && <PostList posts={posts} />}
-        {<Filters selectedTags={tagsFromUrl?.map(tag => ({ label: tag, value: tag }))} allTags={allTags} onFilter={handleFilter} defaultKeywords={keywordsFromUrl} />}
       </GridLayout>
     </>
   );
@@ -45,9 +44,18 @@ export default function Home({ posts, allTags }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {    
   const tags = readMultipleValuesFromQuery(context.query, 'tags');
-  const keywords = readSingleValueFromQuery(context.query, 'keywords');
+  const keywords = readSingleValueFromQuery(context.query, 'keywords') || null;
+
+  const [posts, allTags] = await Promise.all([getPostsFromDB({ tags, keywords }), getTagsFromDB()]);  
+
+  const selectedTags = tags?.reduce((result: TagLabelAndValue[], tag) => {
+    const tagDetails = allTags.find(t => t.label === tag);
+    if (tagDetails) {
+      result.push({ label: tagDetails.label, value: tagDetails.value });
+    }
+    return result;
+  }, []) || null;  
   
-  const [posts, allTags] = await Promise.all([getPostsFromDB({ tags, keywords }), getTagsFromDB()]);    
-  return { props: { posts, allTags } };
+  return { props: { posts, allTags, selectedTags, keywords } };
 };
 

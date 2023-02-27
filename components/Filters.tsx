@@ -16,7 +16,6 @@ const Filters = ({ allTags, selectedTags, onFilter, hideTagFilters, defaultKeywo
   return (
     <Container>
       <div>
-        <h2>Filter</h2>
         <Keywords>
           <label htmlFor="keywords">Keywords</label>
           <input ref={keywordsRef} id="keywords" name="keywords" type="text" defaultValue={defaultKeywords} onChange={(ev) => onFilter({ tags: selectedTags?.map(tag => tag.label), keywords: ev.target.value })} />
@@ -26,7 +25,7 @@ const Filters = ({ allTags, selectedTags, onFilter, hideTagFilters, defaultKeywo
             <span>Tags</span>
             <TagSelect 
               options={allTags} 
-              onChange={(tags) => onFilter({ tags: tags.map(tag => tag.label), keywords: keywordsRef.current?.value })}
+              onChange={(tags) => onFilter({ tags: tags.map(tag => (tag.label)), keywords: keywordsRef.current?.value })}
               value={selectedTags}
             />
           </div>)}
@@ -37,12 +36,6 @@ const Filters = ({ allTags, selectedTags, onFilter, hideTagFilters, defaultKeywo
 
 const Container = styled.section`
   padding-block: 2em;
-  grid-row: 2;
-  position: relative;
-  >:first-child {
-    position: sticky;
-    top: 6em;
-  }
 `;
 
 const Keywords = styled.div`

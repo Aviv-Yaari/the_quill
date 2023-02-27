@@ -14,10 +14,10 @@ interface PostFromAggregation extends Omit<Post, 'timestamp'> {
 }
   
 interface GetPostsFilters {
-    postId?: string;
-    username?: string;
-    tags?: string[];
-    keywords?: string;
+    postId?: string | null;
+    username?: string | null;
+    tags?: string[] | null;
+    keywords?: string | null;
 }
 
 interface CreatePostRequestBody extends NextApiRequest, Pick<Post, 'title' | 'subtitle' | 'body' | 'tags'> {
