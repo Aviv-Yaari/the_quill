@@ -1,7 +1,7 @@
 import { TagLabelAndValue } from "@/types/Tag";
 import { useRef } from "react";
 import styled from "styled-components";
-import TagSelect from "./shared/TagSelect";
+import TagSelect from "./TagSelect";
 
 interface Props {
   allTags: TagLabelAndValue[];

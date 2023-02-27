@@ -5,7 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import styled, { css } from "styled-components";
+import CommentList from "./CommentList";
 import Toast from "./shared/Toast";
+import TagList from "./TagList";
 
 interface Props {
     post: Post;
@@ -43,13 +45,7 @@ const PostPreview: React.FC<Props> = ({ post }) => {
         <span>•</span>
         <ReadTime>{post.read_time} minutes</ReadTime>
         <span>•</span>
-        <ul style={{ display: 'contents' }}>
-          {post.tags.map((tag, index) => 
-            <StyledTag key={tag} isCurrent={!!queryTags?.includes(tag)}>
-              {tag + (index === post.tags.length - 1 ? '' : ', ')}
-            </StyledTag>
-          )}
-        </ul>
+        <TagList tags={post.tags} currentTags={queryTags} />
       </Subtitle>
       <p>{post.body}</p>
       <Subtitle>
@@ -57,6 +53,7 @@ const PostPreview: React.FC<Props> = ({ post }) => {
         <span>•</span>
         <CommentsCount>{post.comments?.length} comments</CommentsCount>
       </Subtitle>
+      <CommentList comments={post.comments} />
     </Container>
   );
 };
@@ -79,10 +76,6 @@ const Subtitle = styled.span`
 
 const Author = styled.span`
   
-`;
-
-const StyledTag = styled.li<{isCurrent: boolean}>`
-  ${({ isCurrent, theme }) => isCurrent && css`color: ${theme.text.link}`};
 `;
 
 const Likes = styled.button<{isLikedByUser: boolean}>`

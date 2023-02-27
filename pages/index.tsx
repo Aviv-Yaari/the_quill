@@ -48,13 +48,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const [posts, allTags] = await Promise.all([getPostsFromDB({ tags, keywords }), getTagsFromDB()]);  
 
-  const selectedTags = tags?.reduce((result: TagLabelAndValue[], tag) => {
+  const selectedTags = tags.reduce((result: TagLabelAndValue[], tag) => {
     const tagDetails = allTags.find(t => t.label === tag);
     if (tagDetails) {
       result.push({ label: tagDetails.label, value: tagDetails.value });
     }
     return result;
-  }, []) || null;  
+  }, []);  
   
   return { props: { posts, allTags, selectedTags, keywords } };
 };

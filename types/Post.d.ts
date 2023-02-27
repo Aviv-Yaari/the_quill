@@ -9,7 +9,11 @@ interface Post extends Pick<PostModel, 'title' | 'subtitle' | 'author' | 'body' 
     isLikedByUser: boolean;
 }
 
-interface PostFromAggregation extends Omit<Post, 'timestamp'> {
+interface PostFromAggregation extends Omit<Post, 'timestamp' | 'comments'> {
+    comments_combined: {
+        authors: string[];
+        bodies: string[];
+    };
     timestamp: string;
 }
   

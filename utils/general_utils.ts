@@ -16,7 +16,7 @@ function readSingleValueFromQuery(query: ParsedUrlQuery, param: string) {
 function readMultipleValuesFromQuery(query: ParsedUrlQuery, param: string) {
   const values = query[param];
   if (!values) {
-    return undefined;
+    return [];
   }
   
   return Array.isArray(values) ? values : values.split(','); 

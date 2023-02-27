@@ -1,5 +1,4 @@
 import { createCommentInDB } from '@/services/comment.service';
-import { readSingleValueFromQuery } from '@/utils/general_utils';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function getComments(req: NextApiRequest, res: NextApiResponse) {
@@ -12,7 +11,7 @@ export default async function getComments(req: NextApiRequest, res: NextApiRespo
 
 async function createComment(req: NextApiRequest, res: NextApiResponse) {
   const body = req.body?.body;
-  const postId = readSingleValueFromQuery(req.query, 'post_id');
+  const postId = req.body?.post_id;
   if (!body || !postId) {
     return res.status(400).end('Missing post ID and post body');
   }

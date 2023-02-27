@@ -2,7 +2,7 @@ import { TagLabelAndValue } from "@/types/Tag";
 import axios from "axios";
 import { FormEventHandler, useState } from "react";
 import styled from "styled-components";
-import TagSelect from "@/components/shared/TagSelect";
+import TagSelect from "@/components/TagSelect";
 import { useRouter } from "next/router";
 import { getTagsFromDB } from "@/services/tag.service";
 import PrimaryButton from "@/components/shared/PrimaryButton";
