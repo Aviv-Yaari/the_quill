@@ -9,6 +9,7 @@ interface Props {
 const PostList = ({ posts }: Props) => {
   return (
     <Container>
+      {!posts.length && <div>No posts found</div>}
       {posts.map(post => <PostPreview key={post.id.toString()} post={post} />)}
     </Container>
   );

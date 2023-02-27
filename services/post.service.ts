@@ -61,6 +61,9 @@ async function getPostsFromDB(filters?: GetPostsFilters): Promise<Post[]> {
   return posts;
 }
 
+/**
+ * Creates a post in the database
+ */
 async function createPostInDB({ title, subtitle, body, tags }: CreatePostRequestBody) {
   const client = await clientPromise;
   const db = client.db("main");

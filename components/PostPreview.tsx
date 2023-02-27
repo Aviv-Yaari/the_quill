@@ -41,8 +41,6 @@ const PostPreview: React.FC<Props> = ({ post }) => {
       <Subtitle>
         <Link href={'/user/' + post.author}>{post.author}</Link>
         <span>•</span>
-        <Likes isLikedByUser={isLikedByUser} onClick={toggleLike}>{likes} ♥</Likes>
-        <span>•</span>
         <ReadTime>{post.read_time} minutes</ReadTime>
         <span>•</span>
         <ul style={{ display: 'contents' }}>
@@ -52,10 +50,13 @@ const PostPreview: React.FC<Props> = ({ post }) => {
             </StyledTag>
           )}
         </ul>
+      </Subtitle>
+      <p>{post.body}</p>
+      <Subtitle>
+        <Likes isLikedByUser={isLikedByUser} onClick={toggleLike}>♥ {likes}</Likes>
         <span>•</span>
         <CommentsCount>{post.comments?.length} comments</CommentsCount>
       </Subtitle>
-      <p>{post.body}</p>
     </Container>
   );
 };
@@ -73,7 +74,7 @@ const Subtitle = styled.span`
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5em;
-  margin-block-end: 1em;
+  margin-block: 1em;
 `;
 
 const Author = styled.span`
