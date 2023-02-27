@@ -1,4 +1,3 @@
-import BackButton from "@/components/shared/BackButton";
 import { TagLabelAndValue } from "@/types/Tag";
 import axios from "axios";
 import { FormEventHandler, useState } from "react";
@@ -42,33 +41,32 @@ export default function CreatePost({ allTags }: Props) {
   return (
     <GridLayout>
       {error && <Toast onClose={() => setError(null)}>{error}</Toast>}
-      <BackButton />
       <div>
-        <h2>Create a Post</h2>
-        <StyledForm onSubmit={handleSubmit}>
-          <Title>
-            <label htmlFor="post_title">Title:</label>
-            <input type="text" id="post_title" name="title" placeholder="Enter some nice title"/>
-          </Title>
-          <Title>
-            <label htmlFor="post_subtitle">Subtitle:</label>
-            <input type="text" id="post_subtitle" name="subtitle" placeholder="A short summary"/>
-          </Title>
-          {allTags && (
-            <Title>
-              <label htmlFor="">Tags:</label>
-              <TagSelect 
-                options={allTags} 
-                onChange={(selected) => setSelectedTags([...selected])}
-              />
-            </Title>)}
-          <Title>
-            <label htmlFor="post_body">Body:</label>
-            <textarea name="body" id="post_body" cols={30} rows={10} placeholder="Your post goes here"></textarea>
-          </Title>
-          <PrimaryButton isBusy={isLoading}>Submit</PrimaryButton>
-        </StyledForm>
+        <h2>Create a post</h2>
       </div>
+      <StyledForm onSubmit={handleSubmit}>
+        <Title>
+          <label htmlFor="post_title">Title:</label>
+          <input type="text" id="post_title" name="title" placeholder="Enter some nice title"/>
+        </Title>
+        <Title>
+          <label htmlFor="post_subtitle">Subtitle:</label>
+          <input type="text" id="post_subtitle" name="subtitle" placeholder="A short summary"/>
+        </Title>
+        {allTags && (
+          <Title>
+            <label htmlFor="">Tags:</label>
+            <TagSelect 
+              options={allTags} 
+              onChange={(selected) => setSelectedTags([...selected])}
+            />
+          </Title>)}
+        <Title>
+          <label htmlFor="post_body">Body:</label>
+          <textarea name="body" id="post_body" cols={30} rows={10} placeholder="Your post goes here"></textarea>
+        </Title>
+        <PrimaryButton isBusy={isLoading}>Submit</PrimaryButton>
+      </StyledForm>
     </GridLayout>
   );
 };

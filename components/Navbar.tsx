@@ -19,7 +19,8 @@ const Navbar = () => {
 };
 
 const Layout = styled(AppLayout)`
-border-bottom: 1px dashed black;
+  border-bottom: 1px dashed black;
+  margin-bottom: 2em;
 `;
 
 const Container = styled.div`

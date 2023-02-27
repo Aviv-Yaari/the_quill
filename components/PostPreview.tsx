@@ -61,6 +61,9 @@ const PostPreview: React.FC<Props> = ({ post }) => {
 };
 
 const Container = styled.article`
+  &:first-child {
+    padding-top: 0
+  }
   padding-block: 2em;
   border-block-end: 1px solid ${({ theme }) => theme.border.primary};
 `;

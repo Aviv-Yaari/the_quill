@@ -15,27 +15,25 @@ const Filters = ({ allTags, selectedTags, onFilter, hideTagFilters, defaultKeywo
   const keywordsRef = useRef<HTMLInputElement>(null);
   return (
     <Container>
-      <div>
-        <Keywords>
-          <label htmlFor="keywords">Keywords</label>
-          <input ref={keywordsRef} id="keywords" name="keywords" type="text" defaultValue={defaultKeywords} onChange={(ev) => onFilter({ tags: selectedTags?.map(tag => tag.label), keywords: ev.target.value })} />
-        </Keywords>
-        {allTags && !hideTagFilters && (
-          <div>
-            <span>Tags</span>
-            <TagSelect 
-              options={allTags} 
-              onChange={(tags) => onFilter({ tags: tags.map(tag => (tag.label)), keywords: keywordsRef.current?.value })}
-              value={selectedTags}
-            />
-          </div>)}
-      </div>
+      <h2>Posts</h2>
+      <Keywords>
+        <label htmlFor="keywords">Keywords</label>
+        <input ref={keywordsRef} id="keywords" name="keywords" type="text" defaultValue={defaultKeywords} onChange={(ev) => onFilter({ tags: selectedTags?.map(tag => tag.label), keywords: ev.target.value })} />
+      </Keywords>
+      {allTags && !hideTagFilters && (
+        <div>
+          <span>Tags</span>
+          <TagSelect 
+            options={allTags} 
+            onChange={(tags) => onFilter({ tags: tags.map(tag => (tag.label)), keywords: keywordsRef.current?.value })}
+            value={selectedTags}
+          />
+        </div>)}
     </Container>
   );
 };
 
 const Container = styled.section`
-  padding-block: 2em;
 `;
 
 const Keywords = styled.div`
