@@ -6,8 +6,9 @@ import TagSelect from "@/components/TagSelect";
 import { useRouter } from "next/router";
 import { getTagsFromDB } from "@/services/tag.service";
 import PrimaryButton from "@/components/shared/PrimaryButton";
-import Toast from "@/components/shared/Toast";
 import { GridLayout } from "@/styles/helpers";
+import { useDispatch } from "react-redux";
+import { raiseError } from "@/store/slices/app.slice";
 
 interface Props {
   allTags: TagLabelAndValue[];
@@ -16,8 +17,8 @@ interface Props {
 export default function CreatePost({ allTags }: Props) {
   const [selectedTags, setSelectedTags] = useState<TagLabelAndValue[]>();
   const router = useRouter();
-  const [error, setError] = useState<string | null>(); // TODO: Use redux
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (ev) => {
     try {
@@ -32,7 +33,7 @@ export default function CreatePost({ allTags }: Props) {
       const result = await axios.post("/api/post", { title, subtitle, body, tags: tagIDs });
       result.data?.id && router.push('/post/' + result.data.id);
     } catch (error) {
-      setError("Apologies! An error occurred");
+      dispatch(raiseError("Can't create a post right now"));
     } finally {
       setIsLoading(false);
     }
@@ -40,7 +41,6 @@ export default function CreatePost({ allTags }: Props) {
 
   return (
     <GridLayout>
-      {error && <Toast onClose={() => setError(null)}>{error}</Toast>}
       <div>
         <h2>Create a post</h2>
       </div>
