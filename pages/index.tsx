@@ -9,6 +9,9 @@ import { getTagsFromDB } from "@/services/tag.service";
 import { TagLabelAndValue } from "@/types/Tag";
 import { useRouter } from "next/router";
 import { GridLayout } from "@/styles/helpers";
+import { useAppSelector } from "@/store";
+import { selectIsLoadingRoute } from "@/store/slices/app.slice";
+import Loader from "@/components/shared/Loader";
 
 interface Props {
   posts: Post[];
@@ -19,6 +22,7 @@ interface Props {
 
 export default function Home({ posts, allTags, selectedTags, keywords }: Props) {
   const router = useRouter();
+  const isLoading = useAppSelector(selectIsLoadingRoute);
 
   const handleFilter: FilterProps['onFilter'] = ({ tags = [], keywords }) => {
     const tagsQuery = tags ? `tags=${[...tags].join(',')}` : '';
@@ -36,7 +40,8 @@ export default function Home({ posts, allTags, selectedTags, keywords }: Props) 
       </Head>
       <GridLayout>
         <Filters selectedTags={selectedTags} allTags={allTags} onFilter={handleFilter} defaultKeywords={keywords} />
-        {posts && <PostList posts={posts} />}
+        {!isLoading && posts && <PostList posts={posts} />}
+        {isLoading && <Loader />}
       </GridLayout>
     </>
   );

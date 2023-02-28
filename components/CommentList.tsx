@@ -6,21 +6,19 @@ import PrimaryButton from "./shared/PrimaryButton";
 interface Props {
     comments: Post['comments'];
     limit: number;
-    showAddComment?: boolean;
     onAddComment: FormEventHandler<HTMLFormElement>;
 }
 
-const CommentList: FunctionComponent<Props> = ({ comments, limit, showAddComment, onAddComment }) => {
+const CommentList: FunctionComponent<Props> = ({ comments, limit, onAddComment }) => {
   return (
     <Container>
       {comments.map((comment, index) => 
-        index < limit && <div key={index}>{comment.author}: {comment.body}</div>
+        index < limit && <p key={index}>{comment.author}: {comment.body}</p>
       )}
-      {showAddComment && (
-        <AddComment onSubmit={onAddComment}>
-          <input type="text" name="body" placeholder="Add a comment..." />
-          <PrimaryButton>Add</PrimaryButton>
-        </AddComment>)}
+      <AddComment onSubmit={onAddComment}>
+        <input type="text" name="body" placeholder="Add a comment..." />
+        <PrimaryButton>Add</PrimaryButton>
+      </AddComment>
     </Container>
   );
 };

@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { breakpoints } from "./theme";
 
 export const AppLayout = styled.div`
-
   display: grid;
   grid-template-columns: 1fr minmax(auto, ${breakpoints.largeDesktopBreakpoint}) 1fr;
   padding-inline: 1em;

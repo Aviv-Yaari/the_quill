@@ -4,12 +4,12 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEventHandler, useState } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import CommentList from "./CommentList";
-import LinkButton from "./shared/LinkButton";
-import Toast from "./shared/Toast";
 import TagList from "./TagList";
 import userMock from '@/mocks/user.mock.json';
+import { useAppDispatch } from "@/store";
+import { raiseError } from "@/store/slices/app.slice";
 
 interface Props {
     post: Post;
@@ -20,9 +20,7 @@ const PostPreview: React.FC<Props> = ({ post: postFromProps }) => {
   const isPostPage = router.pathname === '/post/[id]'; // TODO: move to props
   const queryTags = readMultipleValuesFromQuery(router.query, 'tags'); // TODO: move to props
   const [post, setPost] = useState(postFromProps);
-  const [error, setError] = useState<string | null>(); // TODO: Use redux
-  const [showAddComment, setShowAddComment] = useState(false);
-  
+  const dispatch = useAppDispatch();
   const [limit, setLimit] = useState(isPostPage ? post.comments.length : 3);
 
   const toggleLike = async () => {
@@ -32,41 +30,38 @@ const PostPreview: React.FC<Props> = ({ post: postFromProps }) => {
         setPost(post => ({ ...post, likes: result.data.likes.length, isLikedByUser: !post.isLikedByUser }));
       }  
     } catch (error) {
-      setError("Apologies! An error occurred while trying to like/unlike this post");
+      dispatch(raiseError("Apologies! An error occurred while trying to like/unlike this post"));
     }
-  };
-
-  const toggleShowAddComment = () => {
-    setShowAddComment(state => !state);
   };
 
   const addComment: FormEventHandler<HTMLFormElement> = async (ev) => {
     ev.preventDefault();
     try {
-      const formData = new FormData(ev.currentTarget);
+      if (!(ev.target instanceof HTMLFormElement)) return;
+      const formData = new FormData(ev.target);
       const body = formData.get('body');
       if (!body) throw "Body is empty";
       await axios.post("/api/comment", { body, post_id: post.id });
-      setShowAddComment(false);
       const newComment = { author: userMock.username, body: body as string };
       setPost(post => ({ ...post, comments: [newComment, ...post.comments] }));// TODO: get real logged in user
       setLimit(limit => limit + 1);
+      ev.target.reset();
     } catch (err) {
-      setError("Apologies! An error occurred while trying to add a comment");
+      console.error(err);
+      dispatch(raiseError("Apologies! An error occurred while trying to add a comment"));
     }
   };
 
   return (
     <>
       <Container>
-        {error && <Toast onClose={() => setError(null)}>{error}</Toast>}
         <h2>
           {isPostPage ? post.title : <Link href={'/post/' + post.id}>{post.title}</Link>}
         </h2>
         <Subtitle>
           <Link href={'/user/' + post.author}>{post.author}</Link>
           <span>•</span>
-          <ReadTime>{post.read_time} minutes</ReadTime>
+          <span>{post.read_time} minutes</span>
           <span>•</span>
           <TagList tags={post.tags} currentTags={queryTags} />
         </Subtitle>
@@ -74,9 +69,9 @@ const PostPreview: React.FC<Props> = ({ post: postFromProps }) => {
         <Subtitle>
           <Likes isLikedByUser={post.isLikedByUser} onClick={toggleLike}>♥ {post.likes}</Likes>
           <span>•</span>
-          <LinkButton onClick={toggleShowAddComment}>{post.comments.length} comments</LinkButton>
+          <Link href={'/post/' + post.id + '#comments'}>{post.comments.length} comments</Link>
         </Subtitle>
-        {post.comments.length > 0 && <CommentList comments={post.comments} limit={limit} showAddComment={showAddComment} onAddComment={addComment} />}
+        <CommentList comments={post.comments} limit={limit} onAddComment={addComment} />
       </Container>
     </>
   );
@@ -100,24 +95,12 @@ const Subtitle = styled.span`
   margin-block: 1em;
 `;
 
-const Author = styled.span`
-  
-`;
-
 const Likes = styled.button<{isLikedByUser: boolean}>`
   transition: color 200ms;
-  ${({ isLikedByUser, theme }) => isLikedByUser && css`color: ${theme.text.liked}`};
-
+  ${({ isLikedByUser, theme }) => isLikedByUser && `color: ${theme.text.liked}`};
   &:hover {
     color: ${({ theme }) => theme.text.liked}; 
   }
-`;
-const ReadTime = styled.span`
-  
-`;
-
-const CommentsCount = styled.button`
-
 `;
 
 export default PostPreview;
