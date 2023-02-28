@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import PostModel from "./models/post.model";
 
 interface Post extends Pick<PostModel, 'title' | 'subtitle' | 'author' | 'body' | 'read_time'> {
@@ -10,10 +11,7 @@ interface Post extends Pick<PostModel, 'title' | 'subtitle' | 'author' | 'body' 
 }
 
 interface PostFromAggregation extends Omit<Post, 'timestamp' | 'comments'> {
-    comments_combined: {
-        authors: string[];
-        bodies: string[];
-    };
+    comments: ObjectId[];
     timestamp: string;
 }
   

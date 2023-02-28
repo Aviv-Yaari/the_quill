@@ -5,9 +5,9 @@ interface Props extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLB
     isBusy?: boolean;
 }
 
-const Button = ({ isBusy, children }: Props) => {
+const Button = ({ isBusy, children, ...props }: Props) => {
   return (
-    <button disabled={isBusy}>
+    <button disabled={isBusy} {...props}>
       {isBusy ? <Image src={LoadingSpinner} alt="Loading" /> : children}
     </button>
   );

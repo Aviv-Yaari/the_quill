@@ -3,58 +3,82 @@ import { readMultipleValuesFromQuery } from "@/utils/general_utils";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { FormEventHandler, useState } from "react";
 import styled, { css } from "styled-components";
 import CommentList from "./CommentList";
+import LinkButton from "./shared/LinkButton";
 import Toast from "./shared/Toast";
 import TagList from "./TagList";
+import userMock from '@/mocks/user.mock.json';
 
 interface Props {
     post: Post;
 }
 
-const PostPreview: React.FC<Props> = ({ post }) => {
+const PostPreview: React.FC<Props> = ({ post: postFromProps }) => {
   const router = useRouter();
-  const isPostPage = router.pathname === '/post/[id]';
-  const queryTags = readMultipleValuesFromQuery(router.query, 'tags');
-  const [likes, setLikes] = useState(post.likes); // TODO: move to redux
-  const [isLikedByUser, setIsLikedByUser] = useState(post.isLikedByUser); // TODO: move to redux
+  const isPostPage = router.pathname === '/post/[id]'; // TODO: move to props
+  const queryTags = readMultipleValuesFromQuery(router.query, 'tags'); // TODO: move to props
+  const [post, setPost] = useState(postFromProps);
   const [error, setError] = useState<string | null>(); // TODO: Use redux
+  const [showAddComment, setShowAddComment] = useState(false);
+  
+  const [limit, setLimit] = useState(isPostPage ? post.comments.length : 3);
 
   const toggleLike = async () => {
     try {
-      const result = await axios.patch(`/api/post/${post.id}/${isLikedByUser ? 'unlike' : 'like'}`);
+      const result = await axios.patch(`/api/post/${post.id}/${post.isLikedByUser ? 'unlike' : 'like'}`);
       if (result.data?.likes) {
-        setLikes(result.data.likes.length);
-        setIsLikedByUser(state => !state);
+        setPost(post => ({ ...post, likes: result.data.likes.length, isLikedByUser: !post.isLikedByUser }));
       }  
     } catch (error) {
-      setError("Apologies! An error occurred");
+      setError("Apologies! An error occurred while trying to like/unlike this post");
     }
-    
+  };
+
+  const toggleShowAddComment = () => {
+    setShowAddComment(state => !state);
+  };
+
+  const addComment: FormEventHandler<HTMLFormElement> = async (ev) => {
+    ev.preventDefault();
+    try {
+      const formData = new FormData(ev.currentTarget);
+      const body = formData.get('body');
+      if (!body) throw "Body is empty";
+      await axios.post("/api/comment", { body, post_id: post.id });
+      setShowAddComment(false);
+      const newComment = { author: userMock.username, body: body as string };
+      setPost(post => ({ ...post, comments: [newComment, ...post.comments] }));// TODO: get real logged in user
+      setLimit(limit => limit + 1);
+    } catch (err) {
+      setError("Apologies! An error occurred while trying to add a comment");
+    }
   };
 
   return (
-    <Container>
-      {error && <Toast onClose={() => setError(null)}>{error}</Toast>}
-      <h2>
-        {isPostPage ? post.title : <Link href={'/post/' + post.id}>{post.title}</Link>}
-      </h2>
-      <Subtitle>
-        <Link href={'/user/' + post.author}>{post.author}</Link>
-        <span>•</span>
-        <ReadTime>{post.read_time} minutes</ReadTime>
-        <span>•</span>
-        <TagList tags={post.tags} currentTags={queryTags} />
-      </Subtitle>
-      <p>{post.body}</p>
-      <Subtitle>
-        <Likes isLikedByUser={isLikedByUser} onClick={toggleLike}>♥ {likes}</Likes>
-        <span>•</span>
-        <CommentsCount>{post.comments?.length} comments</CommentsCount>
-      </Subtitle>
-      <CommentList comments={post.comments} />
-    </Container>
+    <>
+      <Container>
+        {error && <Toast onClose={() => setError(null)}>{error}</Toast>}
+        <h2>
+          {isPostPage ? post.title : <Link href={'/post/' + post.id}>{post.title}</Link>}
+        </h2>
+        <Subtitle>
+          <Link href={'/user/' + post.author}>{post.author}</Link>
+          <span>•</span>
+          <ReadTime>{post.read_time} minutes</ReadTime>
+          <span>•</span>
+          <TagList tags={post.tags} currentTags={queryTags} />
+        </Subtitle>
+        <p>{post.body}</p>
+        <Subtitle>
+          <Likes isLikedByUser={post.isLikedByUser} onClick={toggleLike}>♥ {post.likes}</Likes>
+          <span>•</span>
+          <LinkButton onClick={toggleShowAddComment}>{post.comments.length} comments</LinkButton>
+        </Subtitle>
+        {post.comments.length > 0 && <CommentList comments={post.comments} limit={limit} showAddComment={showAddComment} onAddComment={addComment} />}
+      </Container>
+    </>
   );
 };
 
@@ -62,8 +86,10 @@ const Container = styled.article`
   &:first-child {
     padding-top: 0
   }
-  padding-block: 2em;
-  border-block-end: 1px solid ${({ theme }) => theme.border.primary};
+  background: ${({ theme }) => theme.background.secondary};
+  margin-block: 1em;
+  padding: 1em;
+  box-shadow: 1px 1px 2px 0px ${({ theme }) => theme.border.secondary};
 `;
 
 const Subtitle = styled.span`
@@ -90,7 +116,7 @@ const ReadTime = styled.span`
   
 `;
 
-const CommentsCount = styled.span`
+const CommentsCount = styled.button`
 
 `;
 

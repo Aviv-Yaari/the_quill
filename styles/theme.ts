@@ -9,7 +9,7 @@ const theme: DefaultTheme = {
   },
   background: {
     primary: '#f6eade',
-    secondary: 'white'
+    secondary: '#fdf7f1'
   },
   border: {
     primary: "#aaa",

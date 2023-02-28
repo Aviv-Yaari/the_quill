@@ -5,3 +5,5 @@ interface CommentModel extends WithId<Document> {
     post: ObjectId;
     body: string;
 }
+
+export default CommentModel;

@@ -1,6 +1,7 @@
 import clientPromise from "@/utils/mongodb";
 import { ObjectId } from "mongodb";
 import userMock from '@/mocks/user.mock.json';
+import Post from "@/types/Post";
 
 /**
  * Creates a comment in the database
@@ -27,4 +28,16 @@ async function createCommentInDB(postId: string, body: string) {
   throw 'Coudlnt assign comment to post';
 }
 
-export { createCommentInDB };
+const populateComments = async (commentIds: ObjectId[]) => {
+  const client = await clientPromise;
+  const db = client.db("main");
+  const comments = await db.collection("comments").aggregate([
+    { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "author" } },
+    { $unwind: { path: "$author" } },
+    { $match: { _id: { $in: commentIds } } },
+    { $project: { id: { $toString: "$_id" }, _id: 0, author: "$author.username", body: 1 } },
+  ]).toArray();
+  return comments as Post['comments'];
+};
+
+export { createCommentInDB, populateComments };

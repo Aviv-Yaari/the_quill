@@ -31,7 +31,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   input, textarea {
-    padding: 1em;
+    padding: 11.75px;
     font-family: inherit;
     font-size: 1em;
     border: 1px dashed ${({ theme }) => theme.border.primary};

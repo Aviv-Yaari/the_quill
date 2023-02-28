@@ -13,8 +13,9 @@ async function createComment(req: NextApiRequest, res: NextApiResponse) {
   const body = req.body?.body;
   const postId = req.body?.post_id;
   if (!body || !postId) {
-    return res.status(400).end('Missing post ID and post body');
+    return res.status(400).end('Missing post ID or post body');
   }
   const commentId = await createCommentInDB(postId, body);
+  
   res.json({ commentId });
 }
