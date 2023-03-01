@@ -12,6 +12,9 @@ import { GridLayout } from "@/styles/helpers";
 import { useAppSelector } from "@/store";
 import { selectIsLoadingRoute } from "@/store/slices/app.slice";
 import Loader from "@/components/shared/Loader";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { selectPostsData, updatePosts } from "@/store/slices/posts.slice";
 
 interface Props {
   posts: Post[];
@@ -20,9 +23,15 @@ interface Props {
   keywords: string;
 }
 
-export default function Home({ posts, allTags, selectedTags, keywords }: Props) {
+export default function Home({ posts: postsFromProps, allTags, selectedTags, keywords }: Props) {
   const router = useRouter();
   const isLoading = useAppSelector(selectIsLoadingRoute);
+  const posts = useAppSelector(selectPostsData);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(updatePosts(postsFromProps));
+  }, [dispatch, postsFromProps]);
 
   const handleFilter: FilterProps['onFilter'] = ({ tags = [], keywords }) => {
     const tagsQuery = tags ? `tags=${[...tags].join(',')}` : '';

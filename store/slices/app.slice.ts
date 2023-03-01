@@ -2,13 +2,11 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '..';
 
-// Define a type for the slice state
 interface GeneralState {
   error: string | null;
   isLoadingRoute: boolean;
 }
 
-// Define the initial state using that type
 const initialState: GeneralState = {
   error: null,
   isLoadingRoute: false
@@ -16,7 +14,6 @@ const initialState: GeneralState = {
 
 export const appSlice = createSlice({
   name: 'app',
-  // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
     raiseError: (state, action: PayloadAction<string>) => {
@@ -36,7 +33,6 @@ export const appSlice = createSlice({
 
 export const { raiseError, resetError, routeChangeStart, routeChangeEnd } = appSlice.actions;
 
-// Other code such as selectors can use the imported `RootState` type
 export const selectError = (state: RootState) => state.app.error;
 export const selectIsLoadingRoute = (state: RootState) => state.app.isLoadingRoute;
 

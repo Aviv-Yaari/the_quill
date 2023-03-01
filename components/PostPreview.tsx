@@ -10,28 +10,23 @@ import TagList from "./TagList";
 import userMock from '@/mocks/user.mock.json';
 import { useAppDispatch } from "@/store";
 import { raiseError } from "@/store/slices/app.slice";
+import { togglePostLike } from "@/store/slices/posts.thunks";
 
 interface Props {
     post: Post;
 }
 
-const PostPreview: React.FC<Props> = ({ post: postFromProps }) => {
+const PostPreview: React.FC<Props> = ({ post }) => {
   const router = useRouter();
   const isPostPage = router.pathname === '/post/[id]'; // TODO: move to props
   const queryTags = readMultipleValuesFromQuery(router.query, 'tags'); // TODO: move to props
-  const [post, setPost] = useState(postFromProps);
   const dispatch = useAppDispatch();
   const [limit, setLimit] = useState(isPostPage ? post.comments.length : 3);
 
-  const toggleLike = async () => {
-    try {
-      const result = await axios.patch(`/api/post/${post.id}/${post.isLikedByUser ? 'unlike' : 'like'}`);
-      if (result.data?.likes) {
-        setPost(post => ({ ...post, likes: result.data.likes.length, isLikedByUser: !post.isLikedByUser }));
-      }  
-    } catch (error) {
-      dispatch(raiseError("Apologies! An error occurred while trying to like/unlike this post"));
-    }
+  const toggleLike = () => {
+    dispatch(togglePostLike(post))
+      .unwrap()
+      .catch(() => dispatch(raiseError("An error occured while liking/unliking a post")));
   };
 
   const addComment: FormEventHandler<HTMLFormElement> = async (ev) => {
@@ -43,7 +38,7 @@ const PostPreview: React.FC<Props> = ({ post: postFromProps }) => {
       if (!body) throw "Body is empty";
       await axios.post("/api/comment", { body, post_id: post.id });
       const newComment = { author: userMock.username, body: body as string };
-      setPost(post => ({ ...post, comments: [newComment, ...post.comments] }));// TODO: get real logged in user
+      // setPost(post => ({ ...post, comments: [newComment, ...post.comments] }));// TODO: get real logged in user
       setLimit(limit => limit + 1);
       ev.target.reset();
     } catch (err) {
