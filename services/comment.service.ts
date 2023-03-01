@@ -19,7 +19,7 @@ async function createCommentInDB(postId: string, body: string) {
 
   // Assign the comment to the post:
   const { value } = await db.collection("posts").findOneAndUpdate({ _id: new ObjectId(postId) }, { $addToSet: { comments: insertedId as any } });  // TODO: check about the types error here
-  if (value) return;
+  if (value) return insertedId;
 
   // Assign to post didn't work, rollback (remove the created post):
   const { lastErrorObject } = await db.collection("comments").findOneAndDelete({ _id: insertedId });

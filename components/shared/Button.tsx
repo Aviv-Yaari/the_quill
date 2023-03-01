@@ -8,7 +8,7 @@ interface Props extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLB
 const Button = ({ isBusy, children, ...props }: Props) => {
   return (
     <button disabled={isBusy} {...props}>
-      {isBusy ? <Image src={LoadingSpinner} alt="Loading" /> : children}
+      {isBusy ? <Image src={LoadingSpinner} width={16} height={16} alt="Loading" /> : children}
     </button>
   );
 };

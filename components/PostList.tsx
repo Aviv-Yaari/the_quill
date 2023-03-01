@@ -4,13 +4,15 @@ import PostPreview from './PostPreview';
 
 interface Props {
   posts: Post[];
+  isPostPage?: boolean;
+  selectedTags?: string[];
 }
 
-const PostList = ({ posts }: Props) => {
+const PostList = ({ posts, isPostPage, selectedTags }: Props) => {
   return (
     <Container>
       {!posts.length && <div>No posts found</div>}
-      {posts.map(post => <PostPreview key={post.id.toString()} post={post} />)}
+      {posts.map(post => <PostPreview key={post.id.toString()} post={post} isPostPage={isPostPage} selectedTags={selectedTags} />)}
     </Container>
   );
 };

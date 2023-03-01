@@ -3,7 +3,6 @@ import { GetServerSideProps } from "next";
 import type Post from '@/types/Post';
 import PostPreview from "@/components/PostPreview";
 import { readSingleValueFromQuery } from "@/utils/general_utils";
-import { GridLayout } from "@/styles/helpers";
 import styled from "styled-components";
 
 interface Props {
@@ -12,16 +11,19 @@ interface Props {
 
 export default function PostPage({ post }: Props) {
   return (
-    <GridLayout>
-      <Container>
-        {post && <PostPreview post={post} /> } {/* // TODO: fix onLike and onUnlike */}
-      </Container>
-    </GridLayout>
+    <Container>
+      {post && <PostPreview post={post} isPostPage /> }
+    </Container>
   );
 };
 
-const Container = styled.div`
-  grid-column: 2;
+const Container = styled.main`
+  display: flex;
+  justify-content: center;
+  >:first-child {
+    width: 100%;
+    max-width: 768px;
+  }
 `;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {    

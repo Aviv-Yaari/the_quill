@@ -1,3 +1,5 @@
+import { useAppSelector } from "@/store";
+import { selectIsAddCommentLoading } from "@/store/slices/posts.slice";
 import Post from "@/types/Post";
 import { FormEventHandler, FunctionComponent } from "react";
 import styled from "styled-components";
@@ -5,19 +7,20 @@ import PrimaryButton from "./shared/PrimaryButton";
 
 interface Props {
     comments: Post['comments'];
-    limit: number;
     onAddComment: FormEventHandler<HTMLFormElement>;
 }
 
-const CommentList: FunctionComponent<Props> = ({ comments, limit, onAddComment }) => {
+const CommentList: FunctionComponent<Props> = ({ comments, onAddComment }) => {
+  const isAddCommentLoading = useAppSelector(selectIsAddCommentLoading);
+
   return (
     <Container>
       {comments.map((comment, index) => 
-        index < limit && <p key={index}>{comment.author}: {comment.body}</p>
+        index < 3 && <p key={index}>{comment.author}: {comment.body}</p>
       )}
       <AddComment onSubmit={onAddComment}>
         <input type="text" name="body" placeholder="Add a comment..." />
-        <PrimaryButton>Add</PrimaryButton>
+        <PrimaryButton isBusy={isAddCommentLoading}>Add</PrimaryButton>
       </AddComment>
     </Container>
   );

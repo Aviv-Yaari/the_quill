@@ -22,4 +22,12 @@ function readMultipleValuesFromQuery(query: ParsedUrlQuery, param: string) {
   return Array.isArray(values) ? values : values.split(','); 
 }
 
-export { readSingleValueFromQuery, readMultipleValuesFromQuery };
+let debounceTimeout: number;
+function debounce(callback: Function, delay: number = 250) {
+  if (debounceTimeout) {
+    clearTimeout(debounceTimeout);
+  }
+  debounceTimeout = setTimeout(callback, delay);
+}
+
+export { readSingleValueFromQuery, readMultipleValuesFromQuery, debounce };

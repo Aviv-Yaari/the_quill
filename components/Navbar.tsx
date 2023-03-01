@@ -1,4 +1,4 @@
-import { AppLayout } from "@/styles/helpers";
+import { AppWrapper } from "@/styles/helpers";
 import Link from "next/link";
 import styled from "styled-components";
 
@@ -19,7 +19,7 @@ const Navbar = () => {
   );
 };
 
-const Layout = styled(AppLayout)`
+const Layout = styled(AppWrapper)`
   border-bottom: 1px dashed black;
   margin-bottom: 2em;
 `;

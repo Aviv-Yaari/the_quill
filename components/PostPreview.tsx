@@ -1,31 +1,30 @@
 import Post from "@/types/Post";
-import { readMultipleValuesFromQuery } from "@/utils/general_utils";
-import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { FormEventHandler, useState } from "react";
+import { FormEventHandler } from "react";
 import styled from "styled-components";
 import CommentList from "./CommentList";
 import TagList from "./TagList";
-import userMock from '@/mocks/user.mock.json';
 import { useAppDispatch } from "@/store";
 import { raiseError } from "@/store/slices/app.slice";
-import { togglePostLike } from "@/store/slices/posts.thunks";
+import { addCommentToPost, togglePostLike } from "@/store/slices/posts.thunks";
+import { updatePost } from "@/store/slices/posts.slice";
 
 interface Props {
     post: Post;
+    isPostPage?: boolean;
+    selectedTags?: string[];
 }
 
-const PostPreview: React.FC<Props> = ({ post }) => {
-  const router = useRouter();
-  const isPostPage = router.pathname === '/post/[id]'; // TODO: move to props
-  const queryTags = readMultipleValuesFromQuery(router.query, 'tags'); // TODO: move to props
+const PostPreview: React.FC<Props> = ({ post, isPostPage, selectedTags = [] }) => {
+  // const router = useRouter();
+  // const isPostPage = router.pathname === '/post/[id]'; // TODO: move to props
+  // const queryTags = readMultipleValuesFromQuery(router.query, 'tags'); // TODO: move to props
   const dispatch = useAppDispatch();
-  const [limit, setLimit] = useState(isPostPage ? post.comments.length : 3);
 
   const toggleLike = () => {
     dispatch(togglePostLike(post))
       .unwrap()
+      .then((updatedPost) => dispatch(updatePost(updatedPost)))
       .catch(() => dispatch(raiseError("An error occured while liking/unliking a post")));
   };
 
@@ -34,12 +33,8 @@ const PostPreview: React.FC<Props> = ({ post }) => {
     try {
       if (!(ev.target instanceof HTMLFormElement)) return;
       const formData = new FormData(ev.target);
-      const body = formData.get('body');
-      if (!body) throw "Body is empty";
-      await axios.post("/api/comment", { body, post_id: post.id });
-      const newComment = { author: userMock.username, body: body as string };
-      // setPost(post => ({ ...post, comments: [newComment, ...post.comments] }));// TODO: get real logged in user
-      setLimit(limit => limit + 1);
+      const body = formData.get('body') as string;
+      await dispatch(addCommentToPost({ body, postId: post.id })).unwrap();
       ev.target.reset();
     } catch (err) {
       console.error(err);
@@ -58,7 +53,7 @@ const PostPreview: React.FC<Props> = ({ post }) => {
           <span>•</span>
           <span>{post.read_time} minutes</span>
           <span>•</span>
-          <TagList tags={post.tags} currentTags={queryTags} />
+          <TagList tags={post.tags} currentTags={selectedTags} />
         </Subtitle>
         <p>{post.body}</p>
         <Subtitle>
@@ -66,7 +61,7 @@ const PostPreview: React.FC<Props> = ({ post }) => {
           <span>•</span>
           <Link href={'/post/' + post.id + '#comments'}>{post.comments.length} comments</Link>
         </Subtitle>
-        <CommentList comments={post.comments} limit={limit} onAddComment={addComment} />
+        <CommentList comments={post.comments} onAddComment={addComment} />
       </Container>
     </>
   );

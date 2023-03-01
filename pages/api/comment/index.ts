@@ -1,4 +1,4 @@
-import { createCommentInDB } from '@/services/comment.service';
+import { createCommentInDB, populateComments } from '@/services/comment.service';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function getComments(req: NextApiRequest, res: NextApiResponse) {
@@ -16,6 +16,6 @@ async function createComment(req: NextApiRequest, res: NextApiResponse) {
     return res.status(400).end('Missing post ID or post body');
   }
   const commentId = await createCommentInDB(postId, body);
-  
-  res.json({ commentId });
+  const [comment] = await populateComments([commentId]);
+  res.json(comment);
 }

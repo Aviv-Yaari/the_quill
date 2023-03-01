@@ -8,7 +8,7 @@ import { store } from '@/store';
 import { Provider } from 'react-redux';
 import AppError from '@/components/AppError';
 import AppRouterListener from '@/components/AppRouterListener';
-import { AppLayout } from '@/styles/helpers';
+import { AppWrapper } from '@/styles/helpers';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -18,10 +18,10 @@ export default function App({ Component, pageProps }: AppProps) {
           <ThemeProvider theme={theme}>
             <GlobalStyle />
             <Navbar />
-            <AppLayout>
+            <AppWrapper>
               <Component {...pageProps} />
               <AppError />
-            </AppLayout>
+            </AppWrapper>
           </ThemeProvider>
         </AppRouterListener>
       </ErrorBoundary>

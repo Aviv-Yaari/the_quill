@@ -1,5 +1,6 @@
 import { TagLabelAndValue } from "@/types/Tag";
-import { useRef } from "react";
+import { debounce } from "@/utils/general_utils";
+import { ChangeEventHandler, useRef } from "react";
 import styled from "styled-components";
 import TagSelect from "./TagSelect";
 
@@ -13,12 +14,21 @@ interface Props {
 
 const Filters = ({ allTags, selectedTags, onFilter, hideTagFilters, defaultKeywords }: Props) => {
   const keywordsRef = useRef<HTMLInputElement>(null);
+  const onKeywordsChange: ChangeEventHandler<HTMLInputElement> = (ev) => {
+    debounce(() => onFilter({ tags: selectedTags?.map(tag => tag.label), keywords: ev.target.value }));
+  };
   return (
     <Container>
       <h2>Posts</h2>
       <Keywords>
         <label htmlFor="keywords">Keywords</label>
-        <input ref={keywordsRef} id="keywords" name="keywords" type="text" defaultValue={defaultKeywords} onChange={(ev) => onFilter({ tags: selectedTags?.map(tag => tag.label), keywords: ev.target.value })} />
+        <input 
+          ref={keywordsRef} 
+          id="keywords" 
+          name="keywords" 
+          type="text" 
+          defaultValue={defaultKeywords} 
+          onChange={onKeywordsChange} />
       </Keywords>
       {allTags && !hideTagFilters && (
         <div>

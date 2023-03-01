@@ -49,7 +49,7 @@ export default function Home({ posts: postsFromProps, allTags, selectedTags, key
       </Head>
       <GridLayout>
         <Filters selectedTags={selectedTags} allTags={allTags} onFilter={handleFilter} defaultKeywords={keywords} />
-        {!isLoading && posts && <PostList posts={posts} />}
+        {!isLoading && posts && <PostList posts={posts} selectedTags={selectedTags.map(tag => tag.label)} />}
         {isLoading && <Loader />}
       </GridLayout>
     </>
