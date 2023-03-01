@@ -16,9 +16,6 @@ interface Props {
 }
 
 const PostPreview: React.FC<Props> = ({ post, isPostPage, selectedTags = [] }) => {
-  // const router = useRouter();
-  // const isPostPage = router.pathname === '/post/[id]'; // TODO: move to props
-  // const queryTags = readMultipleValuesFromQuery(router.query, 'tags'); // TODO: move to props
   const dispatch = useAppDispatch();
 
   const toggleLike = () => {
