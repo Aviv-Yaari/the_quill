@@ -1,11 +1,18 @@
-import { createCommentInDB, populateComments } from '@/services/comment.service';
+import { createCommentInDB, getCommentsForPost, populateComments } from '@/services/comment.service';
+import { readSingleValueFromQuery } from '@/utils/general_utils';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function getComments(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     return createComment(req, res);
   }
-  res.status(405).end();
+  const postId = readSingleValueFromQuery(req.query, 'postId');
+  const page = readSingleValueFromQuery(req.query, 'page');
+  if (!postId) {
+    return res.status(404).send('Post not found');
+  }
+  const comments = await getCommentsForPost(postId, page);
+  res.send(comments);
 }
 
 

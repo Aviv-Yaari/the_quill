@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '..';
 import Post from '@/types/Post';
-import { addCommentToPostReducers } from './posts.thunks';
+import { addCommentToPostReducers, getPostCommentsReducers, togglePostLikeReducers } from './posts.thunks';
 
 export interface PostState {
   data: Post[] | null;
@@ -27,6 +27,8 @@ export const postsSlice = createSlice({
   },
   extraReducers: (builder) => {
     addCommentToPostReducers(builder);
+    getPostCommentsReducers(builder);
+    togglePostLikeReducers(builder);
   }
 });
 

@@ -7,7 +7,6 @@ import TagList from "./TagList";
 import { useAppDispatch } from "@/store";
 import { raiseError } from "@/store/slices/app.slice";
 import { addCommentToPost, togglePostLike } from "@/store/slices/posts.thunks";
-import { updatePost } from "@/store/slices/posts.slice";
 
 interface Props {
     post: Post;
@@ -21,7 +20,6 @@ const PostPreview: React.FC<Props> = ({ post, isPostPage, selectedTags = [] }) =
   const toggleLike = () => {
     dispatch(togglePostLike(post))
       .unwrap()
-      .then((updatedPost) => dispatch(updatePost(updatedPost)))
       .catch(() => dispatch(raiseError("An error occured while liking/unliking a post")));
   };
 
@@ -56,9 +54,9 @@ const PostPreview: React.FC<Props> = ({ post, isPostPage, selectedTags = [] }) =
         <Subtitle>
           <Likes isLikedByUser={post.isLikedByUser} onClick={toggleLike}>♥ {post.likes}</Likes>
           <span>•</span>
-          <Link href={'/post/' + post.id + '#comments'}>{post.comments.length} comments</Link>
+          <Link href={'/post/' + post.id + '#comments'}>{post.total_comments} comments</Link>
         </Subtitle>
-        <CommentList comments={post.comments} onAddComment={addComment} />
+        <CommentList postId={post.id} totalComments={post.total_comments} comments={post.comments} onAddComment={addComment} />
       </Container>
     </>
   );

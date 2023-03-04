@@ -4,6 +4,7 @@ import type Post from '@/types/Post';
 import { CreatePostRequestBody, GetPostsFilters, PostFromAggregation } from "@/types/Post";
 import userMock from '@/mocks/user.mock.json';
 import { populateComments } from "./comment.service";
+import PostModel from "@/types/models/post.model";
 
 /**
  * Returns reading time of a text (in minutes)
@@ -30,7 +31,8 @@ async function getPostsFromDB(filters?: GetPostsFilters): Promise<Post[]> {
     { $addFields: { isLikedByUser: { $in: [new ObjectId(userId), "$likes._id"] } } },
     { $unwind: { path: "$author" } },
     { $project: { _id: 0, id: { $toString: '$_id' }, timestamp: { $toDate: '$_id' }, title: 1, subtitle: 1, body: 1,
-      tags: "$tags.title", author: "$author.username", read_time: 1, likes: { $size: '$likes' }, isLikedByUser: 1, comments: 1 } }
+      tags: "$tags.title", author: "$author.username", read_time: 1, likes: { $size: '$likes' }, isLikedByUser: 1, comments: 1,
+      total_comments: { $size: '$comments' } } }
   ];
 
   if (filters?.keywords) {
@@ -67,6 +69,16 @@ async function getPostsFromDB(filters?: GetPostsFilters): Promise<Post[]> {
   }
 
   return posts;
+}
+
+/** Basic find by id */
+async function findPostById(id: string) {
+  const client = await clientPromise;
+  const db = client.db("main");
+  const result = await db.collection('posts').findOne({
+    _id: new ObjectId(id)
+  });
+  return result as PostModel;
 }
 
 /**
@@ -106,4 +118,4 @@ async function toggleLike(postId: string, action: 'like' | 'unlike') {
   return result.value;
 }
 
-export { calcReadTime, getPostsFromDB, createPostInDB, toggleLike };
+export { calcReadTime, getPostsFromDB, createPostInDB, toggleLike, findPostById };

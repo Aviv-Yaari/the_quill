@@ -1,10 +1,12 @@
 import { ObjectId } from "mongodb";
 import PostModel from "./models/post.model";
+import PostComment from "./PostComment";
 
 interface Post extends Pick<PostModel, 'title' | 'subtitle' | 'author' | 'body' | 'read_time'> {
     id: string;
     tags: string[];
     comments: PostComment[];
+    total_comments: number;
     timestamp: number;
     likes: number;
     isLikedByUser: boolean;
