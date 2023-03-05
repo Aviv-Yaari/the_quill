@@ -37,7 +37,7 @@ const Container = styled.main`
   }
 `;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {    
+export const getServerSideProps: GetServerSideProps = async (context) => { 
   const id = readSingleValueFromQuery(context.query, 'id');
   const [post] = await getPostsFromDB({ postId: id });
   return { props: { post } };
