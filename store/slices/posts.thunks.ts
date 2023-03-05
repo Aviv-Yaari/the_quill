@@ -45,7 +45,10 @@ export const addCommentToPostReducers = (builder: ActionReducerMapBuilder<PostSt
   builder.addCase(addCommentToPost.fulfilled, (state, action) => {
     const { comment, postId } = action.payload;
     // add the new created comment to top of comments
-    state.data = state.data?.map(post => post.id === postId ? { ...post, comments: [comment, ...post.comments] } : post) || null;
+    const post = state.data?.find(p => p.id === postId);
+    if (!post) return;
+    post.comments.unshift(comment);
+    post.total_comments++;
     state.isAddCommentLoading = false;
   });
 };
