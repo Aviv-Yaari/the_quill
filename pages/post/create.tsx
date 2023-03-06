@@ -9,12 +9,14 @@ import PrimaryButton from "@/components/shared/PrimaryButton";
 import { GridLayout } from "@/styles/helpers";
 import { useDispatch } from "react-redux";
 import { raiseError } from "@/store/slices/app.slice";
+import { requireAuthForGetServerSideProps } from "@/middleware/requireAuth";
+import { GetServerSideProps } from "next";
 
 interface Props {
   allTags: TagLabelAndValue[];
 }
 
-export default function CreatePost({ allTags }: Props) {
+const CreatePostPage = ({ allTags }: Props) => {
   const [selectedTags, setSelectedTags] = useState<TagLabelAndValue[]>();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -82,8 +84,10 @@ const Title = styled.div`
   flex-direction: column;
 `;
 
-export const getServerSideProps = async () => {    
+const _getServerSideProps: GetServerSideProps = async (_context, user?: string) => {
   const allTags = await getTagsFromDB();
-  return { props: { allTags } };
+  return { props: { allTags, user } };
 };
 
+export const getServerSideProps = requireAuthForGetServerSideProps(_getServerSideProps);
+export default CreatePostPage;
