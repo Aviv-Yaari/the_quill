@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import cookie from 'cookie';
+import handleError from "@/middleware/handleError";
 import { authService } from "@/services/auth.service";
+import cookie from 'cookie';
 
-export default async function login(req: NextApiRequest, res: NextApiResponse) {
+async function _login(req: NextApiRequest, res: NextApiResponse) {
   const { username, password } = req.body;
   const token = authService.login(username, password);
   res.setHeader('Set-Cookie', cookie.serialize('token', token, {
@@ -15,3 +16,5 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
 
   res.send(token);
 }
+
+export default handleError(_login);
