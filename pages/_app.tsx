@@ -2,13 +2,11 @@ import { ThemeProvider } from 'styled-components';
 import type { AppProps } from 'next/app';
 import theme from '@/styles/theme';
 import GlobalStyle from '@/styles/GlobalStyle';
-import Navbar from '@/components/Navbar';
 import { ErrorBoundary } from 'react-error-boundary';
 import { store } from '@/store';
 import { Provider } from 'react-redux';
-import AppError from '@/components/AppError';
 import AppRouterListener from '@/components/AppRouterListener';
-import { AppWrapper } from '@/styles/helpers';
+import RootComponent from './RootComponent';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -17,11 +15,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <AppRouterListener>
           <ThemeProvider theme={theme}>
             <GlobalStyle />
-            <Navbar />
-            <AppWrapper>
+            <RootComponent>
               <Component {...pageProps} />
-              <AppError />
-            </AppWrapper>
+            </RootComponent>
           </ThemeProvider>
         </AppRouterListener>
       </ErrorBoundary>

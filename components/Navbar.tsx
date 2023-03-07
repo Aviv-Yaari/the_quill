@@ -2,9 +2,11 @@ import { AppWrapper } from "@/styles/helpers";
 import Link from "next/link";
 import styled from "styled-components";
 
+interface Props {
+  username: string
+}
 
-const Navbar = () => {
-  const username = 'avivyaari';
+const Navbar: React.FC<Props> = ({ username }) => {
 
   return (
     <Layout>
