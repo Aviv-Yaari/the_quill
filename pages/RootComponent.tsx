@@ -1,22 +1,21 @@
 import AppError from "@/components/AppError";
 import Navbar from "@/components/Navbar";
+import { useAppDispatch } from "@/store";
+import { verifyUserFromToken } from "@/store/slices/user.thunks";
 import { AppWrapper } from "@/styles/helpers";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 
 const RootComponent = ({ children }: {children: JSX.Element}) => {
-  const [username, setUsername] = useState('Guest');
+  const dispatch = useAppDispatch();
     
   useEffect(() => {
-    axios.post("/api/auth/verify")
-      .then(res => setUsername(res.data))
-      .catch(() => console.log('bad user'));
-  }, []);
+    dispatch(verifyUserFromToken()).unwrap();
+  }, [dispatch]);
 
   return (
     <>
-      <Navbar username={username} />
+      <Navbar />
       <AppWrapper>
         {children}
         <AppError />

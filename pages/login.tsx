@@ -1,11 +1,17 @@
 import PrimaryButton from "@/components/shared/PrimaryButton";
-import axios from "axios";
+import { useAppDispatch } from "@/store";
+import { raiseError } from "@/store/slices/app.slice";
+import { login } from "@/store/slices/user.thunks";
+import { useRouter } from "next/router";
 
 const LoginPage = () => {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
   const handleLogin = async () => {
-    const token = axios.post("/api/auth/login", { username: 'aviv', password: 1234 })
-      .then(() => { axios.defaults.headers.common['Authorization'] = `Bearer ${token}`; })
-      .catch(() => console.log('bad login'));
+    dispatch(login({ username: 'aviv', password: '1234' })).unwrap()
+      .then(() => router.back())
+      .catch(() => dispatch(raiseError('Could not login')));
   };
   return (
     <div>

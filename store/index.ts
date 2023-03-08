@@ -3,11 +3,13 @@ import { useSelector } from 'react-redux';
 import { TypedUseSelectorHook, useDispatch } from 'react-redux';
 import appReducer from './slices/app.slice';
 import postsReducer from './slices/posts.slice';
+import userReducer from './slices/user.slice';
 
 export const store = configureStore({
   reducer: {
     app: appReducer,
-    posts: postsReducer
+    posts: postsReducer,
+    user: userReducer
   },
 });
 

@@ -4,6 +4,9 @@ import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import PostList from "@/components/PostList";
 import { GridLayout } from "@/styles/helpers";
+import LinkButton from "@/components/shared/LinkButton";
+import { useAppSelector } from "@/store";
+import { selectUsername } from "@/store/slices/user.slice";
 
 interface Props {
   posts: Post[];
@@ -11,11 +14,18 @@ interface Props {
 
 export default function UserPage({ posts }: Props) {
   const router = useRouter();
-  const { username } = router.query;
+  const username = useAppSelector(selectUsername);
+
+  const handleLogout = () => {
+    // TODO: implement this
+  };
 
   return (
     <GridLayout>
-      <h2>{username}</h2>
+      <section>
+        <h2>{username}</h2>
+        <LinkButton onClick={handleLogout}>Logout</LinkButton>
+      </section>
       <PostList posts={posts} />
     </GridLayout>
   );

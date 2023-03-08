@@ -35,7 +35,7 @@ const CreatePostPage = ({ allTags }: Props) => {
       const result = await axios.post("/api/post", { title, subtitle, body, tags: tagIDs });
       result.data?.id && router.push('/post/' + result.data.id);
     } catch (error) {
-      dispatch(raiseError("Can't create a post right now"));
+      dispatch(raiseError("Error while creating a post"));
     } finally {
       setIsLoading(false);
     }

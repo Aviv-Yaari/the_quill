@@ -1,13 +1,11 @@
+import { useAppSelector } from "@/store";
+import { selectUsername } from "@/store/slices/user.slice";
 import { AppWrapper } from "@/styles/helpers";
 import Link from "next/link";
 import styled from "styled-components";
 
-interface Props {
-  username: string
-}
-
-const Navbar: React.FC<Props> = ({ username }) => {
-
+const Navbar: React.FC = () => {
+  const username = useAppSelector(selectUsername);
   return (
     <Layout>
       <Container>
