@@ -12,7 +12,7 @@ const Navbar: React.FC = () => {
         <h1><Link href="/">The Quill</Link></h1>
         <Actions>
           <Link href="/post/create">Create a post</Link>
-          <Link href={`/user/${username}`}>{username}</Link>
+          {username ? <Link href={`/user/${username}`}>{username}</Link> : <Link href="/login">Login</Link>}
         </Actions>
       </Container>
     </Layout>

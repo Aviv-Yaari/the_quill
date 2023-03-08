@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '..';
-import { loginReducers, verifyUserFromTokenReducers } from './user.thunks';
+import { loginReducers, logoutReducers, verifyUserFromTokenReducers } from './user.thunks';
 
 export interface UserState {
   username: string | null;
@@ -18,10 +18,9 @@ export const userSlice = createSlice({
   extraReducers(builder) {
     verifyUserFromTokenReducers(builder);
     loginReducers(builder);
+    logoutReducers(builder);
   },
 });
-
-export const {  } = userSlice.actions;
 
 export const selectUsername = (state: RootState) => state.user.username;
 

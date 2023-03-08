@@ -5,8 +5,10 @@ import { useRouter } from "next/router";
 import PostList from "@/components/PostList";
 import { GridLayout } from "@/styles/helpers";
 import LinkButton from "@/components/shared/LinkButton";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { selectUsername } from "@/store/slices/user.slice";
+import { logout } from "@/store/slices/user.thunks";
+import { raiseError } from "@/store/slices/app.slice";
 
 interface Props {
   posts: Post[];
@@ -15,9 +17,13 @@ interface Props {
 export default function UserPage({ posts }: Props) {
   const router = useRouter();
   const username = useAppSelector(selectUsername);
+  const dispatch = useAppDispatch();
 
   const handleLogout = () => {
-    // TODO: implement this
+    dispatch(logout())
+      .unwrap()
+      .then(() => router.push('/'))
+      .catch(() => dispatch(raiseError('Could not log out')));
   };
 
   return (

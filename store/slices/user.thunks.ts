@@ -24,3 +24,13 @@ export const loginReducers = (builder: ActionReducerMapBuilder<UserState>) => {
     state.username = action.payload.username;
   });
 };
+
+export const logout = createAsyncThunk('user/logoutStatus', async () => {
+  await axios.post("/api/auth/logout");
+});
+    
+export const logoutReducers = (builder: ActionReducerMapBuilder<UserState>) => {
+  builder.addCase(logout.fulfilled, (state) => {
+    state.username = null;
+  });
+};
