@@ -1,6 +1,6 @@
 import type Post from '@/types/Post';
 import styled from 'styled-components';
-import PostPreview from './PostPreview';
+import PostDetails from './PostDetails';
 
 interface Props {
   posts: Post[];
@@ -12,7 +12,7 @@ const PostList = ({ posts, isPostPage, selectedTags }: Props) => {
   return (
     <Container>
       {!posts.length && <div>No posts found</div>}
-      {posts.map(post => <PostPreview key={post.id.toString()} post={post} isPostPage={isPostPage} selectedTags={selectedTags} />)}
+      {posts.map(post => <PostDetails key={post.id.toString()} post={post} isPostPage={isPostPage} selectedTags={selectedTags} />)}
     </Container>
   );
 };

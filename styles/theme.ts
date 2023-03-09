@@ -3,7 +3,7 @@ import { DefaultTheme } from "styled-components";
 const theme: DefaultTheme = {
   text: {
     primary: '#111',
-    secondary: '#0070f3',
+    secondary: '#aaa',
     link: '#285ae6',
     liked: '#EB455F'
   },

@@ -1,6 +1,6 @@
 import { getPostsFromDB } from "@/services/post.service";
 import type Post from '@/types/Post';
-import PostPreview from "@/components/PostPreview";
+import PostDetails from "@/components/PostDetails";
 import { readSingleValueFromQuery } from "@/utils/general_utils";
 import styled from "styled-components";
 import { useEffect } from "react";
@@ -28,7 +28,7 @@ export default function PostPage({ post: postFromProps }: Props) {
     <>
       <Head><title>The Quill - {post?.title}</title></Head>
       <Container>
-        {post && <PostPreview post={post} isPostPage /> }
+        {post && <PostDetails post={post} isPostPage /> }
       </Container>
     </>
   );

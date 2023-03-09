@@ -7,6 +7,8 @@ import TagList from "./TagList";
 import { useAppDispatch } from "@/store";
 import { raiseError } from "@/store/slices/app.slice";
 import { addCommentToPost, togglePostLike } from "@/store/slices/posts.thunks";
+import { formatDate } from "@/utils/general_utils";
+import { useRouter } from "next/router";
 
 interface Props {
     post: Post;
@@ -14,8 +16,9 @@ interface Props {
     selectedTags?: string[];
 }
 
-const PostPreview: React.FC<Props> = ({ post, isPostPage, selectedTags = [] }) => {
+const PostDetails: React.FC<Props> = ({ post, isPostPage, selectedTags = [] }) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const toggleLike = () => {
     dispatch(togglePostLike(post))
@@ -37,14 +40,23 @@ const PostPreview: React.FC<Props> = ({ post, isPostPage, selectedTags = [] }) =
     }
   };
 
+  const handleContainerClick = (e: any) => {
+    if (isPostPage) {
+      return;
+    }
+    router.push("/post/" + post.id);
+  };
+
   return (
     <>
-      <Container>
+      <Container isPostPage={isPostPage} onClick={handleContainerClick}>
         <h2>
           {isPostPage ? post.title : <Link href={'/post/' + post.id}>{post.title}</Link>}
         </h2>
         <Subtitle>
           <Link href={'/user/' + post.author}>{post.author}</Link>
+          <span>•</span>
+          <span>{formatDate(post.timestamp)}</span>
           <span>•</span>
           <span>{post.read_time} minutes</span>
           <span>•</span>
@@ -62,10 +74,11 @@ const PostPreview: React.FC<Props> = ({ post, isPostPage, selectedTags = [] }) =
   );
 };
 
-const Container = styled.article`
+const Container = styled.article<{isPostPage?: boolean}>`
   &:first-child {
     padding-top: 0
   }
+  cursor: ${({ isPostPage }) => isPostPage ? 'initial' : 'pointer'};
   background: ${({ theme }) => theme.background.secondary};
   margin-block: 1em;
   padding: 1em;
@@ -88,4 +101,4 @@ const Likes = styled.button<{isLikedByUser: boolean}>`
   }
 `;
 
-export default PostPreview;
+export default PostDetails;

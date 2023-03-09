@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { selectIsAddCommentLoading } from "@/store/slices/posts.slice";
 import { getPostComments } from "@/store/slices/posts.thunks";
 import Post from "@/types/Post";
+import { formatDate } from "@/utils/general_utils";
 import { FormEventHandler, FunctionComponent, useRef } from "react";
 import styled from "styled-components";
 import LinkButton from "./shared/LinkButton";
@@ -26,7 +27,12 @@ const CommentList: FunctionComponent<Props> = ({ postId, comments, totalComments
 
   return (
     <Container>
-      {comments.map(comment => <p key={comment.id}>{comment.author}: {comment.body}</p>)}
+      {comments.map(comment => 
+        <CommentContainer key={comment.id}>
+          {comment.author}: {comment.body}
+          <CommentDate>{formatDate(comment.timestamp)}</CommentDate>
+        </CommentContainer>
+      )}
       {comments.length < totalComments && <LinkButton onClick={handleLoadPreviousComments}>Load previous comments</LinkButton>}
       <AddComment onSubmit={onAddComment}>
         <input type="text" name="body" placeholder="Add a comment..." />
@@ -35,6 +41,15 @@ const CommentList: FunctionComponent<Props> = ({ postId, comments, totalComments
     </Container>
   );
 };
+
+const CommentContainer = styled.p`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const CommentDate = styled.span`
+  color: ${({ theme }) => theme.text.secondary}
+`;
 
 const Container = styled.section`
   border-block-start: 1px solid #aaa;

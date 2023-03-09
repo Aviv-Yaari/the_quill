@@ -28,7 +28,7 @@ export default function Home({ posts: postsFromProps, allTags, selectedTags, key
   const router = useRouter();
   const isLoading = useAppSelector(selectIsLoadingRoute);
   const posts = useAppSelector(selectPostsData);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch();  
 
   useEffect(() => {
     dispatch(updatePosts(postsFromProps));

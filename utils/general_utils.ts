@@ -30,4 +30,14 @@ function debounce(callback: Function, delay: number = 250) {
   debounceTimeout = setTimeout(callback, delay);
 }
 
-export { readSingleValueFromQuery, readMultipleValuesFromQuery, debounce };
+function formatDate(timestamp: number) {
+  return new Date(timestamp).toLocaleString('en-GB', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  });  
+}
+
+export { readSingleValueFromQuery, readMultipleValuesFromQuery, debounce, formatDate };

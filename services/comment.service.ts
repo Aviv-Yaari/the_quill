@@ -38,8 +38,11 @@ const populateComments = async (commentIds: ObjectId[], page = 0) => {
     { $skip: perPage * page },
     { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "author" } },
     { $unwind: { path: "$author" } },
-    { $project: { id: { $toString: "$_id" }, _id: 0, author: "$author.username", body: 1 } },
+    { $project: { id: { $toString: "$_id" }, _id: 0, author: "$author.username", body: 1, timestamp: { $toDate: '$_id' } } },
   ]).limit(perPage).toArray();
+  comments.forEach(comment => {
+    comment.timestamp = Date.parse(comment.timestamp);
+  });
   return comments as Post['comments'];
 };
 
