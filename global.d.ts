@@ -1,4 +1,11 @@
 import 'styled-components';
+import { UserToken } from './types/User';
+
+declare module 'next' {
+  export interface NextApiRequest {
+    user?: UserToken;
+  }
+}
 
 declare module 'styled-components' {
   // extending the DefaultTheme interface to my theme

@@ -1,5 +1,4 @@
 import { getPostsFromDB } from "@/services/post.service";
-import { GetServerSideProps } from "next";
 import type Post from '@/types/Post';
 import PostPreview from "@/components/PostPreview";
 import { readSingleValueFromQuery } from "@/utils/general_utils";
@@ -7,8 +6,9 @@ import styled from "styled-components";
 import { useEffect } from "react";
 import { selectPostsData, updatePosts } from "@/store/slices/posts.slice";
 import { useAppDispatch, useAppSelector } from "@/store";
-import cookie from 'cookie';
-import { authService } from "@/services/auth.service";
+import { requireAuthForGetServerSideProps } from "@/middleware/requireAuth";
+import { GetServerSidePropsContext } from "next";
+import { UserToken } from "@/types/User";
 
 interface Props {
     post: Post;
@@ -39,10 +39,10 @@ const Container = styled.main`
   }
 `;
 
-export const getServerSideProps: GetServerSideProps = async (context) => { 
-  const id = readSingleValueFromQuery(context.query, 'id');
-  const { token } = cookie.parse(context.req.headers.cookie || '');
-  const loggedInUser = authService.verifyToken(token);
-  const [post] = await getPostsFromDB(loggedInUser?.id, { postId: id });
-  return { props: { post } };
-};
+export const getServerSideProps = requireAuthForGetServerSideProps(
+  async (context: GetServerSidePropsContext, user?: UserToken) => { 
+    const id = readSingleValueFromQuery(context.query, 'id');
+    const [post] = await getPostsFromDB(user?.id, { postId: id });
+    return { props: { post } };
+  }
+);

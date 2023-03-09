@@ -10,7 +10,6 @@ import { GridLayout } from "@/styles/helpers";
 import { useDispatch } from "react-redux";
 import { raiseError } from "@/store/slices/app.slice";
 import { requireAuthForGetServerSideProps } from "@/middleware/requireAuth";
-import { GetServerSideProps } from "next";
 
 interface Props {
   allTags: TagLabelAndValue[];
@@ -84,10 +83,12 @@ const Title = styled.div`
   flex-direction: column;
 `;
 
-const _getServerSideProps: GetServerSideProps = async (_context, user?: string) => {
-  const allTags = await getTagsFromDB();
-  return { props: { allTags, user } };
-};
+export const getServerSideProps = requireAuthForGetServerSideProps(
+  async () => {
+    const allTags = await getTagsFromDB();
+    return { props: { allTags } };
+  },
+  true
+);
 
-export const getServerSideProps = requireAuthForGetServerSideProps(_getServerSideProps);
 export default CreatePostPage;

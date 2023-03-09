@@ -1,9 +1,24 @@
+import requireAuth from '@/middleware/requireAuth';
 import { createCommentInDB, getCommentsForPost, populateComments } from '@/services/comment.service';
+import { APIErrors } from '@/types/APIErrors';
 import { readSingleValueFromQuery } from '@/utils/general_utils';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import cookie from 'cookie';
-import { authService } from '@/services/auth.service';
-import { APIErrors } from '@/types/APIErrors';
+
+const createComment = requireAuth(
+  async (req: NextApiRequest, res: NextApiResponse) => {
+    const body = req.body?.body;
+    const postId = req.body?.post_id;
+    if (!body || !postId) {
+      throw new APIErrors.BadRequestError("Missing post ID or post body");
+    }
+    if (!req.user?.id) {
+      throw new APIErrors.InternalError();
+    }
+    const commentId = await createCommentInDB(req.user.id, postId, body);
+    const [comment] = await populateComments([commentId]);
+    res.json(comment);
+  }
+);
 
 export default async function getComments(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -19,19 +34,3 @@ export default async function getComments(req: NextApiRequest, res: NextApiRespo
 }
 
 
-async function createComment(req: NextApiRequest, res: NextApiResponse) {
-  const body = req.body?.body;
-  const postId = req.body?.post_id;
-  if (!body || !postId) {
-    return res.status(400).end('Missing post ID or post body');
-  }
-
-  const { token } = cookie.parse(req.headers.cookie || '');
-  const loggedInUser = authService.verifyToken(token);
-  if (!loggedInUser?.id) {
-    throw new APIErrors.NotAuthenticatedError();
-  }
-  const commentId = await createCommentInDB(loggedInUser.id, postId, body);
-  const [comment] = await populateComments([commentId]);
-  res.json(comment);
-}

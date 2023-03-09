@@ -1,24 +1,23 @@
 import { toggleLike } from "@/services/post.service";
 import { readSingleValueFromQuery } from "@/utils/general_utils";
 import { NextApiRequest, NextApiResponse } from "next";
-import cookie from 'cookie';
-import { authService } from "@/services/auth.service";
 import { APIErrors } from "@/types/APIErrors";
+import requireAuth from "@/middleware/requireAuth";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const postId = readSingleValueFromQuery(req.query, 'id');
-  const { token } = cookie.parse(req.headers.cookie || '');
-  const loggedInUser = authService.verifyToken(token);
+const unlikePost = requireAuth(
+  async (req: NextApiRequest, res: NextApiResponse) => {
+    const postId = readSingleValueFromQuery(req.query, 'id');
+    if (!req.user?.id) {
+      throw new APIErrors.InternalError();
+    }
+    if (postId && req.method === 'PATCH') {
+      await toggleLike(req.user.id, postId, 'unlike');
+      res.send('Unliked post successfully');
+    }
+    else {
+      res.status(405).end();
+    }
+  }
+);
 
-  if (!loggedInUser) {
-    throw new APIErrors.NotAuthenticatedError();
-  }
-
-  if (postId && req.method === 'PATCH') {
-    await toggleLike(loggedInUser.id, postId, 'unlike');
-    res.send('Unliked post successfully');
-  }
-  else {
-    res.status(405).end();
-  }
-}
+export default unlikePost;

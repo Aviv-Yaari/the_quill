@@ -1,12 +1,14 @@
-import { authService } from "@/services/auth.service";
 import { NextApiRequest, NextApiResponse } from "next";
-import cookie from 'cookie';
+import requireAuth from "@/middleware/requireAuth";
+import { APIErrors } from "@/types/APIErrors";
 
-export default function verify(req: NextApiRequest, res: NextApiResponse) {
-  const { token } = cookie.parse(req.headers.cookie || '');
-  if (!token) {
-    return res.status(400).end("No token in cookies");
+const verify = requireAuth(
+  (req: NextApiRequest, res: NextApiResponse) => {
+    if (!req.user?.id) {
+      throw new APIErrors.InternalError();
+    }
+    res.send(req.user);
   }
-  const user = authService.verifyToken(token);
-  res.send(user);
-}
+);
+
+export default verify;

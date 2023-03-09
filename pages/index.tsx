@@ -3,7 +3,6 @@ import PostList from "@/components/PostList";
 import Post from "@/types/Post";
 import { readMultipleValuesFromQuery, readSingleValueFromQuery } from "@/utils/general_utils";
 import { getPostsFromDB } from "@/services/post.service";
-import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { getTagsFromDB } from "@/services/tag.service";
 import { TagLabelAndValue } from "@/types/Tag";
@@ -15,8 +14,9 @@ import Loader from "@/components/shared/Loader";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { selectPostsData, updatePosts } from "@/store/slices/posts.slice";
-import { authService } from "@/services/auth.service";
-import cookie from 'cookie';
+import { requireAuthForGetServerSideProps } from "@/middleware/requireAuth";
+import { GetServerSidePropsContext } from "next";
+import { UserToken } from "@/types/User";
 interface Props {
   posts: Post[];
   allTags: TagLabelAndValue[];
@@ -57,21 +57,20 @@ export default function Home({ posts: postsFromProps, allTags, selectedTags, key
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {    
-  const tags = readMultipleValuesFromQuery(context.query, 'tags');
-  const keywords = readSingleValueFromQuery(context.query, 'keywords') || null;
-  const { token } = cookie.parse(context.req.headers.cookie || '');
-  const loggedInUser = authService.verifyToken(token);
-  const [posts, allTags] = await Promise.all([getPostsFromDB(loggedInUser?.id, { tags, keywords }), getTagsFromDB()]);  
+export const getServerSideProps = requireAuthForGetServerSideProps(
+  async (context: GetServerSidePropsContext, user?: UserToken) => {   
+    const tags = readMultipleValuesFromQuery(context.query, 'tags');
+    const keywords = readSingleValueFromQuery(context.query, 'keywords') || null;
+    const [posts, allTags] = await Promise.all([getPostsFromDB(user?.id, { tags, keywords }), getTagsFromDB()]);  
 
-  const selectedTags = tags.reduce((result: TagLabelAndValue[], tag) => {
-    const tagDetails = allTags.find(t => t.label === tag);
-    if (tagDetails) {
-      result.push({ label: tagDetails.label, value: tagDetails.value });
-    }
-    return result;
-  }, []);  
+    const selectedTags = tags.reduce((result: TagLabelAndValue[], tag) => {
+      const tagDetails = allTags.find(t => t.label === tag);
+      if (tagDetails) {
+        result.push({ label: tagDetails.label, value: tagDetails.value });
+      }
+      return result;
+    }, []);
   
-  return { props: { posts, allTags, selectedTags, keywords } };
-};
+    return { props: { posts, allTags, selectedTags, keywords } };
+  });
 

@@ -38,7 +38,11 @@ function verifyToken(token: string) {
   if (!token || !process.env.JWT_SECRET) {
     return null;
   }
-  return jwt.verify(token, process.env.JWT_SECRET) as UserToken;
+  const user = jwt.verify(token, process.env.JWT_SECRET) as UserToken;
+  if (!user?.id) {
+    return null;
+  }
+  return user;
 }
 
 export const authService = { login, verifyToken };
