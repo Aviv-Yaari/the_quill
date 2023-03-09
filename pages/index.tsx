@@ -3,7 +3,6 @@ import PostList from "@/components/PostList";
 import Post from "@/types/Post";
 import { readMultipleValuesFromQuery, readSingleValueFromQuery } from "@/utils/general_utils";
 import { getPostsFromDB } from "@/services/post.service";
-import Head from "next/head";
 import { getTagsFromDB } from "@/services/tag.service";
 import { TagLabelAndValue } from "@/types/Tag";
 import { useRouter } from "next/router";
@@ -17,6 +16,7 @@ import { selectPostsData, updatePosts } from "@/store/slices/posts.slice";
 import { requireAuthForGetServerSideProps } from "@/middleware/requireAuth";
 import { GetServerSidePropsContext } from "next";
 import { UserToken } from "@/types/User";
+import Head from "next/head";
 interface Props {
   posts: Post[];
   allTags: TagLabelAndValue[];
@@ -42,12 +42,7 @@ export default function Home({ posts: postsFromProps, allTags, selectedTags, key
   
   return (
     <>
-      <Head>
-        <title>Aviv Yaari</title>
-        <meta name="description" content="Hello, my name is Aviv Yaari" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <Head><title>The Quill</title></Head>
       <GridLayout>
         <Filters selectedTags={selectedTags} allTags={allTags} onFilter={handleFilter} defaultKeywords={keywords} />
         {!isLoading && posts && <PostList posts={posts} selectedTags={selectedTags.map(tag => tag.label)} />}

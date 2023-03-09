@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { requireAuthForGetServerSideProps } from "@/middleware/requireAuth";
 import { GetServerSidePropsContext } from "next";
 import { UserToken } from "@/types/User";
+import Head from "next/head";
 
 interface Props {
     post: Post;
@@ -24,9 +25,12 @@ export default function PostPage({ post: postFromProps }: Props) {
   }, [dispatch, postFromProps]);
 
   return (
-    <Container>
-      {post && <PostPreview post={post} isPostPage /> }
-    </Container>
+    <>
+      <Head><title>The Quill - {post?.title}</title></Head>
+      <Container>
+        {post && <PostPreview post={post} isPostPage /> }
+      </Container>
+    </>
   );
 };
 

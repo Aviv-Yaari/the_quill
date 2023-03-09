@@ -3,6 +3,7 @@ import { useAppDispatch } from "@/store";
 import { raiseError } from "@/store/slices/app.slice";
 import { login } from "@/store/slices/user.thunks";
 import { GridLayout } from "@/styles/helpers";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { FormEventHandler } from "react";
 import styled from "styled-components";
@@ -28,20 +29,23 @@ const LoginPage = () => {
   };
 
   return (
-    <GridLayout>
-      <h2>Login</h2>
-      <Form onSubmit={handleLogin}>
-        <InputAndLabel>
-          <label htmlFor="username">Username</label>
-          <input type="text" name="username" />
-        </InputAndLabel>
-        <InputAndLabel>
-          <label htmlFor="password">Password</label>
-          <input type="password" name="password" />
-        </InputAndLabel>
-        <PrimaryButton>Login</PrimaryButton>
-      </Form>
-    </GridLayout>
+    <>
+      <Head><title>The Quill - Login</title></Head>
+      <GridLayout>
+        <h2>Login</h2>
+        <Form onSubmit={handleLogin}>
+          <InputAndLabel>
+            <label htmlFor="username">Username</label>
+            <input type="text" name="username" />
+          </InputAndLabel>
+          <InputAndLabel>
+            <label htmlFor="password">Password</label>
+            <input type="password" name="password" />
+          </InputAndLabel>
+          <PrimaryButton>Login</PrimaryButton>
+        </Form>
+      </GridLayout>
+    </>
   );
 };
 

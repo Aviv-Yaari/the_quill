@@ -10,6 +10,7 @@ import { GridLayout } from "@/styles/helpers";
 import { useDispatch } from "react-redux";
 import { raiseError } from "@/store/slices/app.slice";
 import { requireAuthForGetServerSideProps } from "@/middleware/requireAuth";
+import Head from "next/head";
 
 interface Props {
   allTags: TagLabelAndValue[];
@@ -41,34 +42,37 @@ const CreatePostPage = ({ allTags }: Props) => {
   };
 
   return (
-    <GridLayout>
-      <div>
-        <h2>Create a post</h2>
-      </div>
-      <StyledForm onSubmit={handleSubmit}>
-        <Title>
-          <label htmlFor="post_title">Title:</label>
-          <input type="text" id="post_title" name="title" placeholder="Enter some nice title"/>
-        </Title>
-        <Title>
-          <label htmlFor="post_subtitle">Subtitle:</label>
-          <input type="text" id="post_subtitle" name="subtitle" placeholder="A short summary"/>
-        </Title>
-        {allTags && (
+    <>
+      <Head><title>The Quill - Create a post</title></Head>
+      <GridLayout>
+        <div>
+          <h2>Create a post</h2>
+        </div>
+        <StyledForm onSubmit={handleSubmit}>
           <Title>
-            <label htmlFor="">Tags:</label>
-            <TagSelect 
-              options={allTags} 
-              onChange={(selected) => setSelectedTags([...selected])}
-            />
-          </Title>)}
-        <Title>
-          <label htmlFor="post_body">Body:</label>
-          <textarea name="body" id="post_body" cols={30} rows={10} placeholder="Your post goes here"></textarea>
-        </Title>
-        <PrimaryButton isBusy={isLoading}>Submit</PrimaryButton>
-      </StyledForm>
-    </GridLayout>
+            <label htmlFor="post_title">Title:</label>
+            <input type="text" id="post_title" name="title" placeholder="Enter some nice title"/>
+          </Title>
+          <Title>
+            <label htmlFor="post_subtitle">Subtitle:</label>
+            <input type="text" id="post_subtitle" name="subtitle" placeholder="A short summary"/>
+          </Title>
+          {allTags && (
+            <Title>
+              <label htmlFor="">Tags:</label>
+              <TagSelect 
+                options={allTags} 
+                onChange={(selected) => setSelectedTags([...selected])}
+              />
+            </Title>)}
+          <Title>
+            <label htmlFor="post_body">Body:</label>
+            <textarea name="body" id="post_body" cols={30} rows={10} placeholder="Your post goes here"></textarea>
+          </Title>
+          <PrimaryButton isBusy={isLoading}>Submit</PrimaryButton>
+        </StyledForm>
+      </GridLayout>
+    </>
   );
 };
 

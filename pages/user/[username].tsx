@@ -11,6 +11,7 @@ import { raiseError } from "@/store/slices/app.slice";
 import { requireAuthForGetServerSideProps } from "@/middleware/requireAuth";
 import { GetServerSidePropsContext } from "next";
 import { UserToken } from "@/types/User";
+import Head from "next/head";
 
 interface Props {
   posts: Post[];
@@ -18,7 +19,8 @@ interface Props {
 
 export default function UserPage({ posts }: Props) {
   const router = useRouter();
-  const username = useAppSelector(selectUsername);
+  const loggedInUsername = useAppSelector(selectUsername);
+  const { username } = router.query;
   const dispatch = useAppDispatch();
 
   const handleLogout = () => {
@@ -29,13 +31,16 @@ export default function UserPage({ posts }: Props) {
   };
 
   return (
-    <GridLayout>
-      <section>
-        <h2>{username}</h2>
-        <LinkButton onClick={handleLogout}>Logout</LinkButton>
-      </section>
-      <PostList posts={posts} />
-    </GridLayout>
+    <>
+      <Head><title>The Quill - {username}</title></Head>
+      <GridLayout>
+        <section>
+          <h2>{username}</h2>
+          {username === loggedInUsername && <LinkButton onClick={handleLogout}>Logout</LinkButton>}
+        </section>
+        <PostList posts={posts} />
+      </GridLayout>
+    </>
   );
 }
 
