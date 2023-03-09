@@ -9,6 +9,8 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { selectUsername } from "@/store/slices/user.slice";
 import { logout } from "@/store/slices/user.thunks";
 import { raiseError } from "@/store/slices/app.slice";
+import cookie from 'cookie';
+import { authService } from "@/services/auth.service";
 
 interface Props {
   posts: Post[];
@@ -39,6 +41,8 @@ export default function UserPage({ posts }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const username = context.query.username as string;
-  const posts = await getPostsFromDB({ username });
+  const { token } = cookie.parse(context.req.headers.cookie || '');
+  const loggedInUser = authService.verifyToken(token);
+  const posts = await getPostsFromDB(loggedInUser?.id, { username });
   return { props: { posts } };
 };

@@ -2,7 +2,6 @@ import clientPromise from "../utils/mongodb";
 import { Document, ObjectId } from 'mongodb';
 import type Post from '@/types/Post';
 import { CreatePostRequestBody, GetPostsFilters, PostFromAggregation } from "@/types/Post";
-import userMock from '@/mocks/user.mock.json';
 import { populateComments } from "./comment.service";
 import PostModel from "@/types/models/post.model";
 
@@ -19,21 +18,23 @@ function calcReadTime(text: string): number {
 /**
  * Returns a query of posts from the database, filtered by the given filters.
  */
-async function getPostsFromDB(filters?: GetPostsFilters): Promise<Post[]> {
+async function getPostsFromDB(loggedInUserId?: string | null, filters?: GetPostsFilters): Promise<Post[]> {
   const client = await clientPromise;
   const db = client.db("main");
-  const userId = userMock.id;
 
   const aggregations: Document[] = [      
     { $lookup: { from: "users", localField: "author", foreignField: "_id", as: "author" } },
     { $lookup: { from: "users", localField: "likes", foreignField: "_id", as: "likes" } },
     { $lookup: { from: "tags", localField: "tags", foreignField: "_id", as: "tags" } },
-    { $addFields: { isLikedByUser: { $in: [new ObjectId(userId), "$likes._id"] } } },
     { $unwind: { path: "$author" } },
     { $project: { _id: 0, id: { $toString: '$_id' }, timestamp: { $toDate: '$_id' }, title: 1, subtitle: 1, body: 1,
       tags: "$tags.title", author: "$author.username", read_time: 1, likes: { $size: '$likes' }, isLikedByUser: 1, comments: 1,
       total_comments: { $size: '$comments' } } }
   ];
+
+  if (loggedInUserId) {
+    aggregations.splice(2, 0, { $addFields: { isLikedByUser: { $in: [new ObjectId(loggedInUserId), "$likes._id"] } } });
+  }
 
   if (filters?.keywords) {
     aggregations.unshift({ $match: { $text: { $search: filters.keywords } } });
@@ -84,21 +85,19 @@ async function findPostById(id: string) {
 /**
  * Creates a post in the database
  */
-async function createPostInDB({ title, subtitle, body, tags }: CreatePostRequestBody) {
+async function createPostInDB({ title, subtitle, body, tags }: CreatePostRequestBody, author: string) {
   const client = await clientPromise;
   const db = client.db("main");
   const readTime = calcReadTime(body);
   const tagIds = tags.map(tag => new ObjectId(tag));
-  const author = new ObjectId(userMock.id); // TODO: Use the user from jwt
   
-  const result = await db.collection("posts").insertOne({ title, subtitle, body, tags: tagIds, author, read_time: readTime, comments: [], likes: [] });
+  const result = await db.collection("posts").insertOne({ title, subtitle, body, tags: tagIds, author: new ObjectId(author), read_time: readTime, comments: [], likes: [] });
   return result.insertedId.toString();
 }
 
-async function toggleLike(postId: string, action: 'like' | 'unlike') {
+async function toggleLike(userId: string, postId: string, action: 'like' | 'unlike') {
   const client = await clientPromise;
   const db = client.db("main");
-  const userId = userMock.id; // TODO: Use the user from jwt
 
   let dbAction;
   if (action === 'like') {
@@ -111,7 +110,7 @@ async function toggleLike(postId: string, action: 'like' | 'unlike') {
     dbAction,
     { returnDocument: 'after' }
   );
-  
+
   if (!result.lastErrorObject?.n) {
     throw 'Update did not succeed';
   }

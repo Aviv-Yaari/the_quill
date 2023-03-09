@@ -1,14 +1,22 @@
+import { toggleLike } from "@/services/post.service";
 import { readSingleValueFromQuery } from "@/utils/general_utils";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getPostsFromDB, toggleLike } from "@/services/post.service";
+import cookie from 'cookie';
+import { authService } from "@/services/auth.service";
+import { APIErrors } from "@/types/APIErrors";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const id = readSingleValueFromQuery(req.query, 'id');
+  const postId = readSingleValueFromQuery(req.query, 'id');
+  const { token } = cookie.parse(req.headers.cookie || '');
+  const loggedInUser = authService.verifyToken(token);
 
-  if (id && req.method === 'PATCH') {
-    await toggleLike(id, 'unlike');
-    const [updatedPost] = await getPostsFromDB({ postId: id });
-    res.json(updatedPost);
+  if (!loggedInUser) {
+    throw new APIErrors.NotAuthenticatedError();
+  }
+
+  if (postId && req.method === 'PATCH') {
+    await toggleLike(loggedInUser.id, postId, 'unlike');
+    res.send('Unliked post successfully');
   }
   else {
     res.status(405).end();

@@ -1,15 +1,16 @@
+import { UserToken } from "@/types/User";
 import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { UserState } from "./user.slice";
 
 export const verifyUserFromToken = createAsyncThunk('user/verifyUserFromTokenStatus', async () => {
   const res = await axios.post("/api/auth/verify");
-  return res.data as string; // should return the username
+  return res.data as UserToken; // should return the username
 });
   
 export const verifyUserFromTokenReducers = (builder: ActionReducerMapBuilder<UserState>) => {
   builder.addCase(verifyUserFromToken.fulfilled, (state, action) => {
-    state.username = action.payload;
+    state.username = action.payload.username;
   });
 };
 

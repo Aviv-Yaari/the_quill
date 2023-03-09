@@ -1,22 +1,21 @@
 import clientPromise from "@/utils/mongodb";
 import { ObjectId } from "mongodb";
-import userMock from '@/mocks/user.mock.json';
 import Post from "@/types/Post";
 import { findPostById } from "./post.service";
 
 /**
  * Creates a comment in the database
  */
-async function createCommentInDB(postId: string, body: string) {
+async function createCommentInDB(authorId: string, postId: string, body: string) {
   const client = await clientPromise;
   const db = client.db("main");
-  const author = new ObjectId(userMock.id); // TODO: Use the user from jwt
 
   // TODO: Check about doing this in a transaction
 
   // Create a new comment:
-  const { insertedId } = await db.collection("comments").insertOne({ author, post: new ObjectId(postId), body });
+  const { insertedId } = await db.collection("comments").insertOne({ author: new ObjectId(authorId), post: new ObjectId(postId), body });
   if (!insertedId) throw 'Couldnt add comment';
+  
 
   // Assign the comment to the post:
   const { value } = await db.collection("posts").findOneAndUpdate({ _id: new ObjectId(postId) }, { $addToSet: { comments: insertedId as any } });  // TODO: check about the types error here

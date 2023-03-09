@@ -12,4 +12,10 @@ class BadRequestError extends ApiError {
   }
 }
 
-export const APIErrors = { InternalError, BadRequestError };
+class NotAuthenticatedError extends ApiError {
+  constructor(message?: string) {
+    super(401, message || "Not Authenticated");
+  }
+}
+
+export const APIErrors = { InternalError, BadRequestError, NotAuthenticatedError };

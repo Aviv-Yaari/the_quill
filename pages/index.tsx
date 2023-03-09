@@ -15,7 +15,8 @@ import Loader from "@/components/shared/Loader";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { selectPostsData, updatePosts } from "@/store/slices/posts.slice";
-
+import { authService } from "@/services/auth.service";
+import cookie from 'cookie';
 interface Props {
   posts: Post[];
   allTags: TagLabelAndValue[];
@@ -59,8 +60,9 @@ export default function Home({ posts: postsFromProps, allTags, selectedTags, key
 export const getServerSideProps: GetServerSideProps = async (context) => {    
   const tags = readMultipleValuesFromQuery(context.query, 'tags');
   const keywords = readSingleValueFromQuery(context.query, 'keywords') || null;
-
-  const [posts, allTags] = await Promise.all([getPostsFromDB({ tags, keywords }), getTagsFromDB()]);  
+  const { token } = cookie.parse(context.req.headers.cookie || '');
+  const loggedInUser = authService.verifyToken(token);
+  const [posts, allTags] = await Promise.all([getPostsFromDB(loggedInUser?.id, { tags, keywords }), getTagsFromDB()]);  
 
   const selectedTags = tags.reduce((result: TagLabelAndValue[], tag) => {
     const tagDetails = allTags.find(t => t.label === tag);

@@ -7,6 +7,8 @@ import styled from "styled-components";
 import { useEffect } from "react";
 import { selectPostsData, updatePosts } from "@/store/slices/posts.slice";
 import { useAppDispatch, useAppSelector } from "@/store";
+import cookie from 'cookie';
+import { authService } from "@/services/auth.service";
 
 interface Props {
     post: Post;
@@ -39,6 +41,8 @@ const Container = styled.main`
 
 export const getServerSideProps: GetServerSideProps = async (context) => { 
   const id = readSingleValueFromQuery(context.query, 'id');
-  const [post] = await getPostsFromDB({ postId: id });
+  const { token } = cookie.parse(context.req.headers.cookie || '');
+  const loggedInUser = authService.verifyToken(token);
+  const [post] = await getPostsFromDB(loggedInUser?.id, { postId: id });
   return { props: { post } };
 };
