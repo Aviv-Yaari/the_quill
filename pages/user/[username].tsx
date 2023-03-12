@@ -5,7 +5,7 @@ import PostList from "@/components/PostList";
 import { GridLayout } from "@/styles/helpers";
 import LinkButton from "@/components/shared/LinkButton";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { selectUsername } from "@/store/slices/user.slice";
+import { selectIsLoading, selectUsername } from "@/store/slices/user.slice";
 import { logout } from "@/store/slices/user.thunks";
 import { raiseError } from "@/store/slices/app.slice";
 import { requireAuthForGetServerSideProps } from "@/middleware/requireAuth";
@@ -22,6 +22,7 @@ export default function UserPage({ posts }: Props) {
   const loggedInUsername = useAppSelector(selectUsername);
   const { username } = router.query;
   const dispatch = useAppDispatch();
+  const isLoading = useAppSelector(selectIsLoading);
 
   const handleLogout = () => {
     dispatch(logout())
@@ -36,7 +37,8 @@ export default function UserPage({ posts }: Props) {
       <GridLayout>
         <section>
           <h2>{username}</h2>
-          {username === loggedInUsername && <LinkButton onClick={handleLogout}>Logout</LinkButton>}
+          {username === loggedInUsername && 
+          (isLoading ? <span>Logging out...</span> : <LinkButton onClick={handleLogout}>Logout</LinkButton>)}
         </section>
         <PostList posts={posts} />
       </GridLayout>

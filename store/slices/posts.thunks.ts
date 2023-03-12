@@ -39,8 +39,11 @@ export const addCommentToPost = createAsyncThunk('posts/addCommentToPostStatus',
 });
 
 export const addCommentToPostReducers = (builder: ActionReducerMapBuilder<PostState>) => {
-  builder.addCase(addCommentToPost.pending, (state) => {
-    state.isAddCommentLoading = true;
+  builder.addCase(addCommentToPost.pending, (state, action) => {
+    state.addingCommentToPostID = action.meta.arg.postId;
+  });
+  builder.addCase(addCommentToPost.rejected, (state) => {
+    state.addingCommentToPostID = null;
   });
   builder.addCase(addCommentToPost.fulfilled, (state, action) => {
     const { comment, postId } = action.payload;
@@ -49,7 +52,7 @@ export const addCommentToPostReducers = (builder: ActionReducerMapBuilder<PostSt
     if (!post) return;
     post.comments.unshift(comment);
     post.total_comments++;
-    state.isAddCommentLoading = false;
+    state.addingCommentToPostID = null;
   });
 };
 

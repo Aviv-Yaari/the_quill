@@ -21,8 +21,15 @@ export const login = createAsyncThunk('user/loginStatus', async (data: { usernam
 });
     
 export const loginReducers = (builder: ActionReducerMapBuilder<UserState>) => {
+  builder.addCase(login.pending, (state, action) => {
+    state.isLoading = true;
+  });
   builder.addCase(login.fulfilled, (state, action) => {
     state.username = action.payload.username;
+    state.isLoading = false;
+  });
+  builder.addCase(login.rejected, (state) => {
+    state.isLoading = false;
   });
 };
 
@@ -31,7 +38,14 @@ export const logout = createAsyncThunk('user/logoutStatus', async () => {
 });
     
 export const logoutReducers = (builder: ActionReducerMapBuilder<UserState>) => {
+  builder.addCase(logout.pending, (state) => {
+    state.isLoading = true;
+  });
+  builder.addCase(logout.rejected, (state) => {
+    state.isLoading = false;
+  });
   builder.addCase(logout.fulfilled, (state) => {
     state.username = null;
+    state.isLoading = false;
   });
 };

@@ -8,7 +8,6 @@ import { useAppDispatch } from "@/store";
 import { raiseError } from "@/store/slices/app.slice";
 import { addCommentToPost, togglePostLike } from "@/store/slices/posts.thunks";
 import { formatDate } from "@/utils/general_utils";
-import { useRouter } from "next/router";
 
 interface Props {
     post: Post;
@@ -18,7 +17,6 @@ interface Props {
 
 const PostDetails: React.FC<Props> = ({ post, isPostPage, selectedTags = [] }) => {
   const dispatch = useAppDispatch();
-  const router = useRouter();
 
   const toggleLike = () => {
     dispatch(togglePostLike(post))
@@ -40,16 +38,9 @@ const PostDetails: React.FC<Props> = ({ post, isPostPage, selectedTags = [] }) =
     }
   };
 
-  const handleContainerClick = (e: any) => {
-    if (isPostPage) {
-      return;
-    }
-    router.push("/post/" + post.id);
-  };
-
   return (
     <>
-      <Container isPostPage={isPostPage} onClick={handleContainerClick}>
+      <Container>
         <h2>
           {isPostPage ? post.title : <Link href={'/post/' + post.id}>{post.title}</Link>}
         </h2>
@@ -74,11 +65,10 @@ const PostDetails: React.FC<Props> = ({ post, isPostPage, selectedTags = [] }) =
   );
 };
 
-const Container = styled.article<{isPostPage?: boolean}>`
+const Container = styled.article`
   &:first-child {
     padding-top: 0
   }
-  cursor: ${({ isPostPage }) => isPostPage ? 'initial' : 'pointer'};
   background: ${({ theme }) => theme.background.secondary};
   margin-block: 1em;
   padding: 1em;

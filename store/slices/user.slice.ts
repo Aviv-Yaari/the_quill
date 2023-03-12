@@ -4,10 +4,12 @@ import { loginReducers, logoutReducers, verifyUserFromTokenReducers } from './us
 
 export interface UserState {
   username: string | null;
+  isLoading: boolean;
 }
 
 const initialState: UserState = {
-  username: null
+  username: null,
+  isLoading: false
 };
 
 export const userSlice = createSlice({
@@ -23,5 +25,6 @@ export const userSlice = createSlice({
 });
 
 export const selectUsername = (state: RootState) => state.user.username;
+export const selectIsLoading = (state: RootState) => state.user.isLoading;
 
 export default userSlice.reducer;

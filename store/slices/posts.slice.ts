@@ -5,12 +5,12 @@ import { addCommentToPostReducers, getPostCommentsReducers, togglePostLikeReduce
 
 export interface PostState {
   data: Post[] | null;
-  isAddCommentLoading: boolean;
+  addingCommentToPostID: string | null;
 }
 
 const initialState: PostState = {
   data: null,
-  isAddCommentLoading: false
+  addingCommentToPostID: null
 };
 
 export const postsSlice = createSlice({
@@ -35,6 +35,6 @@ export const postsSlice = createSlice({
 export const { updatePosts, updatePost } = postsSlice.actions;
 
 export const selectPostsData = (state: RootState) => state.posts.data;
-export const selectIsAddCommentLoading = (state: RootState) => state.posts.isAddCommentLoading;
+export const selectAddingCommentToPostID = (state: RootState) => state.posts.addingCommentToPostID;
 
 export default postsSlice.reducer;

@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/store";
-import { selectIsAddCommentLoading } from "@/store/slices/posts.slice";
+import { selectAddingCommentToPostID } from "@/store/slices/posts.slice";
 import { getPostComments } from "@/store/slices/posts.thunks";
 import Post from "@/types/Post";
 import { formatDate } from "@/utils/general_utils";
@@ -17,7 +17,7 @@ interface Props {
 
 const CommentList: FunctionComponent<Props> = ({ postId, comments, totalComments, onAddComment }) => {
   const page = useRef(1);
-  const isAddCommentLoading = useAppSelector(selectIsAddCommentLoading);
+  const addingCommentToPostID = useAppSelector(selectAddingCommentToPostID);
   const dispatch = useAppDispatch();
 
   const handleLoadPreviousComments = async () => {
@@ -36,7 +36,7 @@ const CommentList: FunctionComponent<Props> = ({ postId, comments, totalComments
       {comments.length < totalComments && <LinkButton onClick={handleLoadPreviousComments}>Load previous comments</LinkButton>}
       <AddComment onSubmit={onAddComment}>
         <input type="text" name="body" placeholder="Add a comment..." />
-        <PrimaryButton isBusy={isAddCommentLoading}>Add</PrimaryButton>
+        <PrimaryButton isBusy={addingCommentToPostID === postId}>Add</PrimaryButton>
       </AddComment>
     </Container>
   );

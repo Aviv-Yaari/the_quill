@@ -1,6 +1,7 @@
 import PrimaryButton from "@/components/shared/PrimaryButton";
-import { useAppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { raiseError } from "@/store/slices/app.slice";
+import { selectIsLoading } from "@/store/slices/user.slice";
 import { login } from "@/store/slices/user.thunks";
 import { GridLayout } from "@/styles/helpers";
 import Head from "next/head";
@@ -11,6 +12,7 @@ import styled from "styled-components";
 const LoginPage = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const isLoading = useAppSelector(selectIsLoading);
 
   const handleLogin: FormEventHandler<HTMLFormElement> = (ev) => {
     ev.preventDefault();
@@ -25,7 +27,6 @@ const LoginPage = () => {
     dispatch(login({ username, password })).unwrap()
       .then(() => router.back())
       .catch(() => dispatch(raiseError('Could not login')));
-
   };
 
   return (
@@ -42,7 +43,7 @@ const LoginPage = () => {
             <label htmlFor="password">Password</label>
             <input type="password" name="password" />
           </InputAndLabel>
-          <PrimaryButton>Login</PrimaryButton>
+          <PrimaryButton isBusy={isLoading}>Login</PrimaryButton>
         </Form>
       </GridLayout>
     </>
