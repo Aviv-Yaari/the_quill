@@ -1,3 +1,4 @@
+import LinkButton from "@/components/shared/LinkButton";
 import PrimaryButton from "@/components/shared/PrimaryButton";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { raiseError } from "@/store/slices/app.slice";
@@ -25,7 +26,13 @@ const LoginPage = () => {
       return;
     }
     dispatch(login({ username, password })).unwrap()
-      .then(() => router.back())
+      .then(() => router.push('/'))
+      .catch(() => dispatch(raiseError('Could not login')));
+  };
+
+  const handleDemoUserLogin = () => {
+    dispatch(login({ username: 'aviv', password: '1234' })).unwrap()
+      .then(() => router.push('/'))
       .catch(() => dispatch(raiseError('Could not login')));
   };
 
@@ -37,13 +44,16 @@ const LoginPage = () => {
         <Form onSubmit={handleLogin}>
           <InputAndLabel>
             <label htmlFor="username">Username</label>
-            <input type="text" name="username" />
+            <input type="text" name="username" placeholder="Demo username: aviv"/>
           </InputAndLabel>
           <InputAndLabel>
             <label htmlFor="password">Password</label>
-            <input type="password" name="password" />
+            <input type="password" name="password" placeholder="Demo password: 1234" />
           </InputAndLabel>
-          <PrimaryButton isBusy={isLoading}>Login</PrimaryButton>
+          <div>
+            <PrimaryButton isBusy={isLoading}>Login</PrimaryButton>
+            <LinkButton type="button" onClick={handleDemoUserLogin}>Login with demo user</LinkButton>
+          </div>
         </Form>
       </GridLayout>
     </>

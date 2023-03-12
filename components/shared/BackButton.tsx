@@ -9,7 +9,7 @@ const BackButton = ({ href }: Props) => {
   const router = useRouter();
 
   const handleClick = () => {
-    href ? router.push(href) : router.back();
+    href ? router.push(href) : router.push('/');
   };
   
   return (
