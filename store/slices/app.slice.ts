@@ -4,12 +4,10 @@ import type { RootState } from '..';
 
 interface GeneralState {
   error: string | null;
-  isLoadingRoute: boolean;
 }
 
 const initialState: GeneralState = {
-  error: null,
-  isLoadingRoute: false
+  error: null
 };
 
 export const appSlice = createSlice({
@@ -21,19 +19,12 @@ export const appSlice = createSlice({
     },
     resetError: (state) => {
       state.error = null;
-    },
-    routeChangeStart: (state) => {
-      state.isLoadingRoute = true;
-    },
-    routeChangeEnd: (state) => {
-      state.isLoadingRoute = false;
     }
   },
 });
 
-export const { raiseError, resetError, routeChangeStart, routeChangeEnd } = appSlice.actions;
+export const { raiseError, resetError } = appSlice.actions;
 
 export const selectError = (state: RootState) => state.app.error;
-export const selectIsLoadingRoute = (state: RootState) => state.app.isLoadingRoute;
 
 export default appSlice.reducer;

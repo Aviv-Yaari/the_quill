@@ -1,7 +1,8 @@
 import { useAppDispatch } from "@/store";
-import { routeChangeEnd, routeChangeStart } from "@/store/slices/app.slice";
 import { Router } from "next/router";
 import { ReactNode, useEffect } from "react";
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 
 interface Props {
     children: ReactNode;
@@ -11,8 +12,13 @@ const AppRoterListener = ({ children }: Props) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const handleRouteChangeStart = () => dispatch(routeChangeStart());
-    const handleRouteChangeEnd = () => dispatch(routeChangeEnd());
+    const handleRouteChangeStart = () => {
+      NProgress.start();
+    };
+    
+    const handleRouteChangeEnd = () => {
+      NProgress.done();
+    };
 
     Router.events.on('routeChangeStart', handleRouteChangeStart);
     Router.events.on('routeChangeComplete', handleRouteChangeEnd);

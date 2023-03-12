@@ -8,8 +8,6 @@ import { TagLabelAndValue } from "@/types/Tag";
 import { useRouter } from "next/router";
 import { GridLayout } from "@/styles/helpers";
 import { useAppSelector } from "@/store";
-import { selectIsLoadingRoute } from "@/store/slices/app.slice";
-import Loader from "@/components/shared/Loader";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { selectPostsData, updatePosts } from "@/store/slices/posts.slice";
@@ -26,7 +24,6 @@ interface Props {
 
 export default function Home({ posts: postsFromProps, allTags, selectedTags, keywords }: Props) {
   const router = useRouter();
-  const isLoading = useAppSelector(selectIsLoadingRoute);
   const posts = useAppSelector(selectPostsData);
   const dispatch = useDispatch();  
 
@@ -45,8 +42,7 @@ export default function Home({ posts: postsFromProps, allTags, selectedTags, key
       <Head><title>The Quill</title></Head>
       <GridLayout>
         <Filters selectedTags={selectedTags} allTags={allTags} onFilter={handleFilter} defaultKeywords={keywords} />
-        {!isLoading && posts && <PostList posts={posts} selectedTags={selectedTags.map(tag => tag.label)} />}
-        {isLoading && <Loader />}
+        {posts && <PostList posts={posts} selectedTags={selectedTags.map(tag => tag.label)} />}
       </GridLayout>
     </>
   );
