@@ -1,6 +1,8 @@
 *In progress*
 # The Quill
-This is a simple blog posts app built with Next.js, TypeScript, and MongoDB. The app allows users to create posts, like posts, and add comments to posts.
+This is a simple blog posts app built with Next.js, TypeScript, and MongoDB. The app allows users to create posts, like posts, and add comments to posts.  
+The motivation behind this project is my interest to learn how to use some cool Next.js features, such as server side rendering and static rendering, 
+and to challenge myself by integrating with a MongoDB database without the help of Mongoose, and write complex native MongoDB queries, which is something I haven't had too much experience with.
 
 ## Features
 ### Create a Post

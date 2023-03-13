@@ -33,7 +33,7 @@ function debounce(callback: Function, delay: number = 250) {
 function formatDate(timestamp: number) {
   return new Date(timestamp).toLocaleString('en-GB', {
     year: 'numeric',
-    month: '2-digit',
+    month: 'short',
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit'

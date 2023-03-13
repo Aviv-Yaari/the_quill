@@ -22,6 +22,7 @@ interface GetPostsFilters {
     username?: string | null;
     tags?: string[] | null;
     keywords?: string | null;
+    category?: 'top_rated' | 'most_recent';
 }
 
 interface CreatePostRequestBody extends NextApiRequest, Pick<Post, 'title' | 'subtitle' | 'body' | 'tags'> {

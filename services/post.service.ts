@@ -52,6 +52,8 @@ async function getPostsFromDB(loggedInUserId?: string | null, filters?: GetPosts
     aggregations.push({ $match: { tags: { $in: filters.tags } } });
   }
 
+  aggregations.push({ $sort: filters?.category === 'most_recent' ? { timestamp: -1 } : { likes: -1 } });
+
   const result = await db
     .collection("posts")
     .aggregate(aggregations)

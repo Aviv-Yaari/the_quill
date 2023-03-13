@@ -3,6 +3,7 @@ import Image from 'next/image';
 
 interface Props extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
     isBusy?: boolean;
+    isActive?: boolean;
 }
 
 const Button = ({ isBusy, children, ...props }: Props) => {
