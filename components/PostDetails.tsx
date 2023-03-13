@@ -67,10 +67,10 @@ const PostDetails: React.FC<Props> = ({ post, isPostPage, selectedTags = [] }) =
 
 const Container = styled.article`
   &:first-child {
-    padding-top: 0
+    margin-top: 0;
   }
   background: ${({ theme }) => theme.background.secondary};
-  margin-block: 1em;
+  margin-block: 3em;
   padding: 1em;
   box-shadow: 1px 1px 2px 0px ${({ theme }) => theme.border.secondary};
 `;

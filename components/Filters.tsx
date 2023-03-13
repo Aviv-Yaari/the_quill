@@ -9,7 +9,7 @@ import TagSelect from "./TagSelect";
 interface Props {
   allTags: TagLabelAndValue[];
   selectedTags?: TagLabelAndValue[];
-  onFilter: (filters: { tags?: string[], keywords?: string, category?: 'top_rated' | 'most_recent' }) => void;
+  onFilter: (filters: GetPostsFilters) => void;
   hideTagFilters?: boolean;
   defaultKeywords?: string;
   category: GetPostsFilters['category'];
