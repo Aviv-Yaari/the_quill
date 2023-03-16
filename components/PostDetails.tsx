@@ -4,10 +4,11 @@ import { FormEventHandler } from "react";
 import styled from "styled-components";
 import CommentList from "./CommentList";
 import TagList from "./TagList";
-import { useAppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { raiseError } from "@/store/slices/app.slice";
 import { addCommentToPost, togglePostLike } from "@/store/slices/posts.thunks";
 import { formatDate } from "@/utils/general_utils";
+import { selectUsername } from "@/store/slices/user.slice";
 
 interface Props {
     post: Post;
@@ -17,8 +18,13 @@ interface Props {
 
 const PostDetails: React.FC<Props> = ({ post, isPostPage, selectedTags = [] }) => {
   const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUsername);
 
   const toggleLike = () => {
+    if (!user) {
+      dispatch(raiseError("Please login in order to like posts"));
+      return;
+    }
     dispatch(togglePostLike(post))
       .unwrap()
       .catch(() => dispatch(raiseError("An error occured while liking/unliking a post")));
@@ -26,6 +32,10 @@ const PostDetails: React.FC<Props> = ({ post, isPostPage, selectedTags = [] }) =
 
   const addComment: FormEventHandler<HTMLFormElement> = async (ev) => {
     ev.preventDefault();
+    if (!user) {
+      dispatch(raiseError("Please login in order to comment"));
+      return;
+    }
     try {
       if (!(ev.target instanceof HTMLFormElement)) return;
       const formData = new FormData(ev.target);

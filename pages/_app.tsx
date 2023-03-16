@@ -10,17 +10,19 @@ import RootComponent from './RootComponent';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <Provider store={store}>
-      <ErrorBoundary FallbackComponent={() => <div>An unexpected error occured</div>}>
-        <AppRouterListener>
-          <ThemeProvider theme={theme}>
-            <GlobalStyle />
-            <RootComponent>
-              <Component {...pageProps} />
-            </RootComponent>
-          </ThemeProvider>
-        </AppRouterListener>
-      </ErrorBoundary>
-    </Provider>
+    <>
+      <Provider store={store}>
+        <ErrorBoundary FallbackComponent={() => <div>An unexpected error occured</div>}>
+          <AppRouterListener>
+            <ThemeProvider theme={theme}>
+              <GlobalStyle />
+              <RootComponent>
+                <Component {...pageProps} />
+              </RootComponent>
+            </ThemeProvider>
+          </AppRouterListener>
+        </ErrorBoundary>
+      </Provider>
+    </>
   );
 }

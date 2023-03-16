@@ -51,23 +51,20 @@ const CreatePostPage = ({ allTags }: Props) => {
         <StyledForm onSubmit={handleSubmit}>
           <Title>
             <label htmlFor="post_title">Title:</label>
-            <input type="text" id="post_title" name="title" placeholder="Enter some nice title"/>
+            <input type="text" id="post_title" name="title" placeholder="Enter some nice title" minLength={5} maxLength={30} required />
           </Title>
           <Title>
             <label htmlFor="post_subtitle">Subtitle:</label>
-            <input type="text" id="post_subtitle" name="subtitle" placeholder="A short summary"/>
+            <input type="text" id="post_subtitle" name="subtitle" placeholder="A short summary" minLength={5} maxLength={30} required />
           </Title>
           {allTags && (
             <Title>
               <label htmlFor="">Tags:</label>
-              <TagSelect 
-                options={allTags} 
-                onChange={(selected) => setSelectedTags([...selected])}
-              />
+              <TagSelect options={allTags} onChange={(selected) => setSelectedTags([...selected])} />
             </Title>)}
           <Title>
             <label htmlFor="post_body">Body:</label>
-            <textarea name="body" id="post_body" cols={30} rows={10} placeholder="Your post goes here"></textarea>
+            <textarea name="body" id="post_body" cols={30} rows={10} placeholder="Your post goes here" minLength={30} maxLength={300} required />
           </Title>
           <PrimaryButton isBusy={isLoading}>Submit</PrimaryButton>
         </StyledForm>

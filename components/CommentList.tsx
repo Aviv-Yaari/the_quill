@@ -45,10 +45,12 @@ const CommentList: FunctionComponent<Props> = ({ postId, comments, totalComments
 const CommentContainer = styled.p`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const CommentDate = styled.span`
-  color: ${({ theme }) => theme.text.secondary}
+  color: ${({ theme }) => theme.text.secondary};
+  font-size: 0.8em;
 `;
 
 const Container = styled.section`

@@ -10,7 +10,7 @@ const RootComponent = ({ children }: {children: JSX.Element}) => {
   const dispatch = useAppDispatch();
     
   useEffect(() => {
-    dispatch(verifyUserFromToken()).unwrap();
+    dispatch(verifyUserFromToken()).unwrap().catch(() => console.info('not logged in'));
   }, [dispatch]);
 
   return (
